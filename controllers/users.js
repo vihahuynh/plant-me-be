@@ -7,10 +7,23 @@ usersRouter.post('/', async (request, response, next) => {
         const { username, email, password } = request.body
 
         const existingUser = await User.findOne({ username })
+        const existingEmail = await User.findOne({ email })
+
+        if (password.length < 8) {
+            return response.status(400).json({
+                error: 'password must contain at least 8 characters'
+            })
+        }
 
         if (existingUser) {
             return response.status(400).json({
                 error: 'username must be unique'
+            })
+        }
+
+        if (existingEmail) {
+            return response.status(400).json({
+                error: 'Email address must be unique'
             })
         }
 
