@@ -23,7 +23,7 @@ usersRouter.post('/', async (request, response, next) => {
 
         if (existingEmail) {
             return response.status(400).json({
-                error: 'Email address is already exists!'
+                error: 'Email address is already!'
             })
         }
 
