@@ -17,13 +17,13 @@ usersRouter.post('/', async (request, response, next) => {
 
         if (existingUser) {
             return response.status(400).json({
-                error: 'username must be unique'
+                error: 'Username is already exists!'
             })
         }
 
         if (existingEmail) {
             return response.status(400).json({
-                error: 'Email address must be unique'
+                error: 'Email address is already exists!'
             })
         }
 
