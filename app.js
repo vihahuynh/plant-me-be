@@ -26,10 +26,10 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 
-app.use('/api/notes', notesRouter)
+app.use('/api/notes', middleware.tokenExtractor, notesRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
-app.use('/api/products', productsRouter)
+app.use('/api/products', middleware.tokenExtractor, productsRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

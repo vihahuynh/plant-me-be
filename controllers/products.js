@@ -1,11 +1,8 @@
 const productsRouter = require('express').Router()
 const Product = require('./../models/product')
 const User = require('./../models/user')
-const fs = require("fs")
-const path = require("path")
 const multer = require("multer")
-
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -20,6 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
+        console.log(file)
         if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
             cb(null, true);
         } else {
@@ -27,17 +25,27 @@ const upload = multer({
             return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
         }
     }
-});
+})
 
 productsRouter.get('/', async (request, response) => {
     const products = await Product.find({})
     response.json(products)
 })
 
-productsRouter.post('/', upload.single('image'), async (request, response) => {
+productsRouter.post('/', upload.array('images'), async (request, response) => {
+    const decodedToken = request.token ? jwt.verify(request.token, process.env.SECRET) : null
+    if (!decodedToken?.id) {
+        return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    const user = await User.findById(decodedToken.id)
+
+    if (!user?.isAdmin) {
+        return response.status(403).json({ error: 'permission denied' })
+    }
+
     const url = request.protocol + '://' + request.get('host')
     const newProduct = {
-        image: url + '/photos/' + request.file.filename
+        images: request.files.map(f => `${url}/photos/${f.filename}`)
     }
     const product = new Product(newProduct)
     const addedProduct = await product.save()
