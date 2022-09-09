@@ -7,60 +7,59 @@ const mongoose = require("mongoose")
 //     soldCount: 345,
 
 const productSchema = new mongoose.Schema({
-    images: [{
-        data: Buffer,
-        contentType: String
-    }],
+    image: {
+        type: String
+    },
     title: {
-        required: true,
+        // required: true,
         type: String,
     },
     size: [String],
     colors: [String],
     price: {
         type: Number,
-        required: true
+        // required: true
     },
     salePercent: Number,
     about: String,
     livingCondition: [{
         title: {
             type: String,
-            required: true
+            // required: true
         },
         text: {
             type: String,
-            required: true
+            // required: true
         },
     }],
     plantCare: [{
         title: {
             type: String,
-            required: true
+            // required: true
         },
         text: {
             type: String,
-            required: true
+            // required: true
         },
     }],
     commonProblems: [{
         title: {
             type: String,
-            required: true
+            // required: true
         },
         text: {
             type: String,
-            required: true
+            // required: true
         },
     }],
     decorTips: [{
         title: {
             type: String,
-            required: true
+            // required: true
         },
         text: {
             type: String,
-            required: true
+            // required: true
         },
     }],
 })
