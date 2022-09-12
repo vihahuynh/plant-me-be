@@ -27,29 +27,38 @@ const upload = multer({
     }
 })
 
-productsRouter.get('/', async (request, response) => {
-    const products = await Product.find({})
-    response.json(products)
+productsRouter.get('/', async (request, response, next) => {
+    try {
+        const products = await Product.find({})
+        response.json(products)
+    } catch (err) {
+        next(err)
+    }
 })
 
-productsRouter.post('/', upload.array('images'), async (request, response) => {
-    const decodedToken = request.token ? jwt.verify(request.token, process.env.SECRET) : null
-    if (!decodedToken?.id) {
-        return response.status(401).json({ error: 'token missing or invalid' })
-    }
-    const user = await User.findById(decodedToken.id)
+productsRouter.post('/', upload.array('images'), async (request, response, next) => {
+    try {
+        const newProduct = JSON.parse(request.body?.obj)
+        const decodedToken = request.token ? jwt.verify(request.token, process.env.SECRET) : null
+        if (!decodedToken?.id) {
+            return response.status(401).json({ error: 'token missing or invalid' })
+        }
+        const user = await User.findById(decodedToken.id)
 
-    if (!user?.isAdmin) {
-        return response.status(403).json({ error: 'permission denied' })
-    }
+        if (!user?.isAdmin) {
+            return response.status(403).json({ error: 'permission denied' })
+        }
 
-    const url = request.protocol + '://' + request.get('host')
-    const newProduct = {
-        images: request.files.map(f => `${url}/photos/${f.filename}`)
+        const url = request.protocol + '://' + request.get('host')
+
+        newProduct.images = request.files.map(f => `${url}/photos/${f.filename}`)
+
+        const product = new Product(newProduct)
+        const addedProduct = await product.save()
+        response.json(addedProduct)
+    } catch (err) {
+        next(err)
     }
-    const product = new Product(newProduct)
-    const addedProduct = await product.save()
-    response.json(addedProduct)
 })
 
 module.exports = productsRouter

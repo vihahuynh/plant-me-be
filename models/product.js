@@ -24,12 +24,12 @@ const productSchema = new mongoose.Schema({
     },
     salePercent: Number,
     about: String,
-    livingCondition: [{
+    livingConditions: [{
         title: {
             type: String,
             required: true
         },
-        text: {
+        content: {
             type: String,
             required: true
         },
@@ -39,7 +39,7 @@ const productSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        text: {
+        content: {
             type: String,
             required: true
         },
@@ -49,7 +49,7 @@ const productSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        text: {
+        content: {
             type: String,
             required: true
         },
@@ -59,7 +59,7 @@ const productSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        text: {
+        content: {
             type: String,
             required: true
         },
