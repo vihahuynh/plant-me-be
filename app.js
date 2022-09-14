@@ -31,6 +31,7 @@ app.use("/api/notes", middleware.tokenExtractor, notesRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/products", middleware.tokenExtractor, productsRouter);
+app.use("/photos", express.static("photos"))
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
