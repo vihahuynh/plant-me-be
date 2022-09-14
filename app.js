@@ -6,6 +6,7 @@ const notesRouter = require("./controllers/notes");
 const userRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 const productsRouter = require("./controllers/products");
+const reviewsRouter = require("./controllers/reviews")
 
 const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
@@ -27,10 +28,11 @@ app.use(express.static("build"));
 app.use(express.json());
 app.use(middleware.requestLogger);
 
-app.use("/api/notes", middleware.tokenExtractor, notesRouter);
+// app.use("/api/notes", middleware.tokenExtractor, notesRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/products", middleware.tokenExtractor, productsRouter);
+app.use("/api/reviews", middleware.tokenExtractor, reviewsRouter)
 app.use("/photos", express.static("photos"))
 
 app.use(middleware.unknownEndpoint);

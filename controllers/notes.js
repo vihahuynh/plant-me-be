@@ -6,10 +6,11 @@ const jwt = require("jsonwebtoken");
 
 notesRouter.get("/", async (request, response, next) => {
   try {
-    const notes = await Note.find({}).populate("user", {
-      username: 1,
-      name: 1,
-    });
+    const notes = await Note.find({})
+      .populate("user", {
+        username: 1,
+        name: 1,
+      })
     response.json(notes);
   } catch (err) {
     next(err);
@@ -33,7 +34,7 @@ notesRouter.post("/", async (request, response) => {
   const decodedToken = request.token
     ? jwt.verify(request.token, process.env.SECRET)
     : null;
-  if (!decodedToken.id) {
+  if (!decodedToken?.id) {
     return response.status(401).json({ error: "token missing or invalid" });
   }
   const user = await User.findById(decodedToken.id);

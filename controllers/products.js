@@ -1,35 +1,8 @@
 const productsRouter = require("express").Router();
 const Product = require("./../models/product");
 const User = require("./../models/user");
-const multer = require("multer");
 const jwt = require("jsonwebtoken");
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./photos/");
-  },
-  filename: (req, file, cb) => {
-    const fileName = file.originalname.toLowerCase().split(" ").join("-");
-    cb(null, `${Date.now()}-${fileName}`);
-  },
-});
-
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    console.log(file);
-    if (
-      file.mimetype === "image/png" ||
-      file.mimetype === "image/jpg" ||
-      file.mimetype === "image/jpeg"
-    ) {
-      cb(null, true);
-    } else {
-      cb(null, false);
-      return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
-    }
-  },
-});
+const upload = require("./../utils/uploadImages")
 
 productsRouter.get("/", async (request, response, next) => {
   try {
@@ -43,7 +16,7 @@ productsRouter.get("/", async (request, response, next) => {
 productsRouter.get("/:id", async (request, response, next) => {
   try {
     const { id } = request.params;
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate("reviews")
     response.json(product);
   } catch (err) {
     next(err);
