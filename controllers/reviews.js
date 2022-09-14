@@ -3,6 +3,7 @@ const reviewRouter = require("express").Router()
 const Review = require("../models/review")
 const User = require("../models/user")
 const Product = require("../models/product")
+const upload = require("../utils/uploadImages")
 
 reviewRouter.get("/", async (request, response, next) => {
     try {
@@ -15,7 +16,7 @@ reviewRouter.get("/", async (request, response, next) => {
     }
 })
 
-reviewRouter.post("/", async (request, response, next) => {
+reviewRouter.post("/", upload.array("images"), async (request, response, next) => {
     try {
         const newReview = JSON.parse(request.body?.obj);
         const decodedToken = request.token ? jwt.verify(request.token, process.env.SECRET) : null
@@ -23,7 +24,7 @@ reviewRouter.post("/", async (request, response, next) => {
             response.status(401).json({ err: "token missing or invalid" })
         }
         const user = await User.findById(decodedToken.id)
-        const product = await Product.findById(body.productId)
+        const product = await Product.findById(newReview.productId)
 
         const url = request.protocol + "://" + request.get("host");
 
@@ -44,7 +45,6 @@ reviewRouter.post("/", async (request, response, next) => {
     } catch (err) {
         next(err)
     }
-
 })
 
 module.exports = reviewRouter
