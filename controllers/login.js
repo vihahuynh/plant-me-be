@@ -31,9 +31,11 @@ loginRouter.post("/", async (request, response) => {
     expiresIn: 24 * 60 * 60,
   });
 
+  const { username, email, likedReviews, likedProducts, isAdmin, _id } = user
+
   response
     .status(200)
-    .send({ token, username: user.username, email: user.email });
+    .send({ token, username, email, likedReviews, likedProducts, isAdmin, id: _id.toString() });
 });
 
 module.exports = loginRouter;

@@ -45,7 +45,7 @@ usersRouter.post("/", async (request, response, next) => {
   }
 });
 
-usersRouter.put("/", async (request, response, next) => {
+usersRouter.put("/:id", async (request, response, next) => {
   try {
     const { body } = request;
     const decodedToken = request.token
@@ -57,13 +57,12 @@ usersRouter.put("/", async (request, response, next) => {
     const user = await User.findById(decodedToken.id);
     if (user.username === body.username) {
       const userToUpdate = {
-        ...user,
-        likeReviews: body.likeReviews,
+        likedReviews: body.likedReviews,
         likedProducts: body.likedProducts,
-      };
+      }
       // TODO: update avatarImage
-      const updatedUser = await userToUpdate.save();
-      response.json(updatedUser);
+      const updatedUser = await User.findByIdAndUpdate(request.params.id, userToUpdate, { new: true })
+      return response.json(updatedUser);
     }
     response.status(403).json({ err: "permission denied" });
   } catch (err) {
