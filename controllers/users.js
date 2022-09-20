@@ -55,13 +55,17 @@ usersRouter.put("/:id", async (request, response, next) => {
       response.status(401).json({ err: "token missing or invalid" });
     }
     const user = await User.findById(decodedToken.id);
-    if (user.username === body.username) {
+    if (user.username === body.username || user.isAdmin) {
       const userToUpdate = {
         likedReviews: body.likedReviews,
         likedProducts: body.likedProducts,
-      }
+      };
       // TODO: update avatarImage
-      const updatedUser = await User.findByIdAndUpdate(request.params.id, userToUpdate, { new: true })
+      const updatedUser = await User.findByIdAndUpdate(
+        request.params.id,
+        userToUpdate,
+        { new: true }
+      );
       return response.json(updatedUser);
     }
     response.status(403).json({ err: "permission denied" });
@@ -72,8 +76,18 @@ usersRouter.put("/:id", async (request, response, next) => {
 
 usersRouter.get("/", async (request, response, next) => {
   try {
-    const users = await User.find();
-    response.json(users);
+    const decodedToken = request.token
+      ? jwt.verify(request.token, process.env.SECRET)
+      : null;
+    if (!decodedToken?.id) {
+      return response.status(401).json({ err: "token missing or invalid" });
+    }
+    const user = await User.findById(decodedToken.id);
+    if (user && user.isAdmin) {
+      const users = await User.find();
+      return response.json(users);
+    }
+    return response.status(403).json({ err: "permission denied" });
   } catch (err) {
     next(err);
   }
