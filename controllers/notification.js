@@ -6,6 +6,14 @@ notificationRouter.post("/:id", async (request, response, next) => {
     const newNoti = new Notification({
       text: request.body.text,
       user: request.body.user,
+      isRead: {
+        type: Boolean,
+        default: false,
+      },
+      show: {
+        type: Boolean,
+        default: true,
+      },
     });
     await newNoti.save();
   } catch (err) {
