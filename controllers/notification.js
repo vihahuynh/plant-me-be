@@ -5,6 +5,7 @@ notificationRouter.post("/:id", async (request, response, next) => {
   try {
     const newNoti = new Notification({
       text: request.body.text,
+      user: request.body.user,
     });
     await newNoti.save();
   } catch (err) {
