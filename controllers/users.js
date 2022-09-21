@@ -65,7 +65,7 @@ usersRouter.put("/:id", async (request, response, next) => {
         request.params.id,
         userToUpdate,
         { new: true }
-      ).populate("likedProducts")
+      ).populate("likedProducts");
       return response.json(updatedUser);
     }
     response.status(403).json({ err: "permission denied" });

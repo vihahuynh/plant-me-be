@@ -2,7 +2,7 @@ const productsRouter = require("express").Router();
 const Product = require("./../models/product");
 const User = require("./../models/user");
 const jwt = require("jsonwebtoken");
-const upload = require("./../utils/uploadImages")
+const upload = require("./../utils/uploadImages");
 
 productsRouter.get("/", async (request, response, next) => {
   try {
@@ -16,7 +16,7 @@ productsRouter.get("/", async (request, response, next) => {
 productsRouter.get("/:id", async (request, response, next) => {
   try {
     const { id } = request.params;
-    const product = await Product.findById(id)
+    const product = await Product.findById(id);
     response.json(product);
   } catch (err) {
     next(err);

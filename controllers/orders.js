@@ -34,7 +34,9 @@ orderRouter.get("/:id", async (request, response, next) => {
       return response.status(401).json({ err: "token missing or invalid" });
     }
     const user = await User.findById(decodedToken.id);
-    const order = await Order.findById(request.params.id);
+    const order = await Order.findById(request.params.id).populate(
+      "notification"
+    );
     if (order?.user.toString() === user?.id || user.isAdmin) {
       return response.json(order);
     }
@@ -87,6 +89,7 @@ orderRouter.post("/", async (request, response, next) => {
 
     const returedOrder = await newOrder.save();
     user.orders = user.orders.concat(returedOrder._id);
+    await user.save();
     return response.status(201).json(returedOrder);
   } catch (err) {
     next(err);
