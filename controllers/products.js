@@ -16,7 +16,7 @@ productsRouter.get("/", async (request, response, next) => {
 productsRouter.get("/:id", async (request, response, next) => {
   try {
     const { id } = request.params;
-    const product = await Product.findById(id).populate("reviews")
+    const product = await Product.findById(id)
     response.json(product);
   } catch (err) {
     next(err);
