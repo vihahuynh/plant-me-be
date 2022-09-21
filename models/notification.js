@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const notificationSchema = mongoose.Schema({
-  text: {
+  content: {
     type: String,
     required: true,
   },
@@ -12,6 +12,24 @@ const notificationSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true
+  },
+  order: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Order"
+  },
+  url: String,
+  type: {
+    type: String,
+    default: "order"
+  },
+  isRead: {
+    type: Boolean,
+    default: false,
+  },
+  show: {
+    type: Boolean,
+    default: true,
   },
 });
 

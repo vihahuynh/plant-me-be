@@ -33,7 +33,7 @@ app.use("/api/users", middleware.tokenExtractor, userRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/products", middleware.tokenExtractor, productsRouter);
 app.use("/api/reviews", middleware.tokenExtractor, reviewsRouter);
-app.use("/api/notification", notificationRouter);
+app.use("/api/notification", middleware.tokenExtractor, notificationRouter);
 app.use("/api/orders/", middleware.tokenExtractor, orderRouter);
 app.use("/photos", express.static("photos"));
 
