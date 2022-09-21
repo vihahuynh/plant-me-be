@@ -49,7 +49,7 @@ productsRouter.post(
 
       const product = new Product(newProduct);
       const addedProduct = await product.save();
-      response.json(addedProduct);
+      response.status(201).json(addedProduct);
     } catch (err) {
       next(err);
     }

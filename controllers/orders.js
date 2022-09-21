@@ -87,7 +87,7 @@ orderRouter.post("/", async (request, response, next) => {
 
     const returedOrder = await newOrder.save();
     user.orders = user.orders.concat(returedOrder._id);
-    return response.json(returedOrder);
+    return response.status(201).json(returedOrder);
   } catch (err) {
     next(err);
   }

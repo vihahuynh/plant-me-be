@@ -74,7 +74,7 @@ reviewRouter.post(
       await user.save();
       product.reviews = product.reviews.concat(savedReview._id);
       await product.save();
-      response.json(savedReview);
+      response.status(201).json(savedReview);
     } catch (err) {
       next(err);
     }

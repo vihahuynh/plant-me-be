@@ -45,7 +45,7 @@ notificationRouter.post("/", async (request, response, next) => {
       user: body.user
     })
     const returnedNoti = await newNoti.save();
-    response.json(returnedNoti)
+    response.status(201).json(returnedNoti)
   } catch (err) {
     next(err);
   }
@@ -95,7 +95,7 @@ notificationRouter.delete("/:id", async (request, response, next) => {
       response.status(403).json({ err: "permission denied" })
     }
     await Notification.findByIdAndDelete(id)
-    response.status(201).json({ message: "done" })
+    response.status(204).json({ message: "done" })
   } catch (err) {
     next(err)
   }
