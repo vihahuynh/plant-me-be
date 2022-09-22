@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema({
       title: {
         type: String,
         require: true,
-        trim: TextTrackCueList
+        trim: true
       },
       price: {
         type: Number,
