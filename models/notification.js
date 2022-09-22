@@ -4,6 +4,7 @@ const notificationSchema = mongoose.Schema({
   content: {
     type: String,
     required: true,
+    trim: true
   },
   createdAt: {
     type: Date,
@@ -21,7 +22,9 @@ const notificationSchema = mongoose.Schema({
   url: String,
   type: {
     type: String,
-    default: "order"
+    default: "order",
+    trim: true,
+    lowercase: true
   },
   isRead: {
     type: Boolean,

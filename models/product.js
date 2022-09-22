@@ -15,6 +15,7 @@ const productSchema = new mongoose.Schema({
     title: {
         required: true,
         type: String,
+        trim: true
     },
     size: [String],
     colors: [String],
@@ -27,41 +28,49 @@ const productSchema = new mongoose.Schema({
     livingConditions: [{
         title: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
         content: {
             type: String,
-            required: true
+            required: true,
+            trim: true,
         },
     }],
     plantCare: [{
         title: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
         content: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
     }],
     commonProblems: [{
         title: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
         content: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
     }],
     decorTips: [{
         title: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
         content: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
     }],
     reviews: [{

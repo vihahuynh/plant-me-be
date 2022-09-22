@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator")
 
 const orderSchema = new mongoose.Schema({
   user: {
@@ -17,6 +18,7 @@ const orderSchema = new mongoose.Schema({
       title: {
         type: String,
         require: true,
+        trim: TextTrackCueList
       },
       price: {
         type: Number,
@@ -32,14 +34,22 @@ const orderSchema = new mongoose.Schema({
   address: {
     type: String,
     require: true,
+    trim: true
   },
   phoneNumber: {
     type: String,
     require: true,
+    trim: true,
+    validate(value) {
+      if (!validator.isMobilePhone(value, 'vi-VN')) {
+        throw new Error("phone number is invalid")
+      }
+    }
   },
   receiverName: {
     type: String,
     require: true,
+    trim: true,
   },
   paymentMethod: {
     type: String,

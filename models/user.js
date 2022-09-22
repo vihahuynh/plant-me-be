@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator")
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -6,6 +7,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     unique: true,
+    trim: true
   },
   email: {
     type: String,
@@ -13,11 +15,13 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     unique: true,
     required: true,
-    match: [
-      // eslint-disable-next-line no-useless-escape
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      "Please fill a valid email address",
-    ],
+    trim: true,
+    lowercase: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error("email is invalid")
+      }
+    }
   },
   passwordHash: String,
   reviews: [
