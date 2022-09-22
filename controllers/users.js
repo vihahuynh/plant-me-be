@@ -68,6 +68,9 @@ usersRouter.put("/:id", async (request, response, next) => {
       ).populate("likedProducts");
       return response.json(updatedUser);
     }
+    if (!user) {
+      response.status(404).json({ message: "No user found" })
+    }
     response.status(403).json({ err: "permission denied" });
   } catch (err) {
     next(err);

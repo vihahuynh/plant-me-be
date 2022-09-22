@@ -17,6 +17,9 @@ productsRouter.get("/:id", async (request, response, next) => {
   try {
     const { id } = request.params;
     const product = await Product.findById(id);
+    if (!product) {
+      return response.status(404).json({ message: "No product found" })
+    }
     response.json(product);
   } catch (err) {
     next(err);

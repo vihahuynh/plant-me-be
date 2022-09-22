@@ -37,10 +37,13 @@ orderRouter.get("/:id", async (request, response, next) => {
     const order = await Order.findById(request.params.id).populate(
       "notification"
     );
+
     if (order?.user.toString() === user?.id || user.isAdmin) {
       return response.json(order);
     }
-
+    if (!order) {
+      return response.status(404).json({ message: "No order found" })
+    }
     return response.status(403).json({ err: "permission denied" });
   } catch (err) {
     next(err);

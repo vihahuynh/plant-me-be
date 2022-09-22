@@ -84,6 +84,10 @@ notificationRouter.put("/:id", async (request, response, next) => {
     if (user?.id !== noti?.user.toString()) {
       response.status(403).json({ err: "permission denied" });
     }
+
+    if (!noti) {
+      response.status(404).json({ message: "No notification found" })
+    }
     const notiToUpdate = {
       ...noti._doc,
       isRead: body.hasOwnProperty("isRead") ? body.isRead : noti.isRead,
