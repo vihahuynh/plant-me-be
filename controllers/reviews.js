@@ -10,7 +10,7 @@ reviewRouter.get("/", async (request, response, next) => {
     const { query } = request;
     const reviews = await Review.find(query)
       .populate("createdBy", { username: 1 })
-      .populate("product", { title: 1 });
+      .populate("product", { title: 1, images: 1 });
     response.json(reviews);
   } catch (err) {
     next(err);

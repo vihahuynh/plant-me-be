@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const validator = require("validator")
+const validator = require("validator");
 
 const orderSchema = new mongoose.Schema({
   user: {
@@ -18,7 +18,15 @@ const orderSchema = new mongoose.Schema({
       title: {
         type: String,
         require: true,
-        trim: true
+        trim: true,
+      },
+      color: {
+        type: String,
+        required: true,
+      },
+      size: {
+        type: String,
+        required: true,
       },
       price: {
         type: Number,
@@ -29,22 +37,26 @@ const orderSchema = new mongoose.Schema({
         require: true,
       },
       discount: Number,
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
     },
   ],
   address: {
     type: String,
     require: true,
-    trim: true
+    trim: true,
   },
   phoneNumber: {
     type: String,
     require: true,
     trim: true,
     validate(value) {
-      if (!validator.isMobilePhone(value, 'vi-VN')) {
-        throw new Error("phone number is invalid")
+      if (!validator.isMobilePhone(value, "vi-VN")) {
+        throw new Error("phone number is invalid");
       }
-    }
+    },
   },
   receiverName: {
     type: String,
