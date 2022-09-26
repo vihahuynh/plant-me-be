@@ -1,3 +1,4 @@
+const fs = require("fs").promises;
 const bcrypt = require("bcrypt");
 const usersRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
@@ -45,33 +46,45 @@ usersRouter.post("/", async (request, response, next) => {
   }
 });
 
-usersRouter.put("/:id", async (request, response, next) => {
+usersRouter.patch("/:id", async (request, response, next) => {
   try {
-    const { body } = request;
+    const { id } = request.params;
     const decodedToken = request.token
       ? jwt.verify(request.token, process.env.SECRET)
       : null;
     if (!decodedToken?.id) {
-      response.status(401).json({ err: "token missing or invalid" });
+      return response.status(401).json({ err: "token missing or invalid" });
     }
     const user = await User.findById(decodedToken.id);
-    if (user.username === body.username || user.isAdmin) {
-      const userToUpdate = {
-        likedReviews: body.likedReviews,
-        likedProducts: body.likedProducts,
-      };
-      // TODO: update avatarImage
-      const updatedUser = await User.findByIdAndUpdate(
-        request.params.id,
-        userToUpdate,
-        { new: true, runValidators: true }
-      ).populate("likedProducts");
-      return response.json(updatedUser);
-    }
     if (!user) {
-      response.status(404).json({ message: "No user found" })
+      return response.status(404).json({ message: "No user found" });
     }
-    response.status(403).json({ err: "permission denied" });
+
+    const userToUpdate = request.body;
+    const url = `${request.protocol}://${request.get(
+      "host"
+    )}/photos/${id}-avatar.png`;
+
+    delete userToUpdate.avatarUrl;
+
+    if (userToUpdate?.avatarUrl) {
+      const base64Data = userToUpdate?.avatarUrl?.replace(
+        /^data:image\/png;base64,/,
+        ""
+      );
+      await fs.writeFile(`./photos/${id}-avatar.png`, base64Data, "base64");
+
+      userToUpdate.avatarUrl = url;
+    }
+    if (user.username === userToUpdate.username || user.isAdmin) {
+      const updatedUser = await User.findByIdAndUpdate(id, userToUpdate, {
+        new: true,
+        runValidators: true,
+      });
+      return response.status(200).json(updatedUser);
+    } else {
+      response.status(403).json({ err: "permission denied" });
+    }
   } catch (err) {
     next(err);
   }

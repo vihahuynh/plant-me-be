@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const validator = require("validator")
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -7,16 +7,16 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     unique: true,
-    trim: true
+    trim: true,
   },
   fullname: {
     type: String,
     minlength: 5,
-    trim: true
+    trim: true,
   },
   avatarUrl: {
     type: String,
-    default: 'http://localhost:3001/photos/default-avatar.png'
+    default: "http://localhost:3001/photos/default-avatar.png",
   },
   email: {
     type: String,
@@ -24,13 +24,11 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     unique: true,
     required: true,
-    trim: true,
-    lowercase: true,
     validate(value) {
       if (!validator.isEmail(value)) {
-        throw new Error("email is invalid")
+        throw new Error("email is invalid");
       }
-    }
+    },
   },
   phoneNumber: {
     type: String,
@@ -45,10 +43,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     lowercase: true,
     validate(value) {
-      if (value.lowercase() !== "female" && value.lowercase() !== "male") {
-        throw new Error("gender is invalid")
+      if (
+        value &&
+        value.toLowerCase() !== "female" &&
+        value.toLowerCase() !== "male"
+      ) {
+        throw new Error("gender is invalid");
       }
-    }
+    },
   },
   passwordHash: String,
   reviews: [
