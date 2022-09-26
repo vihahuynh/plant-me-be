@@ -64,7 +64,7 @@ usersRouter.put("/:id", async (request, response, next) => {
       const updatedUser = await User.findByIdAndUpdate(
         request.params.id,
         userToUpdate,
-        { new: true }
+        { new: true, runValidators: true }
       ).populate("likedProducts");
       return response.json(updatedUser);
     }

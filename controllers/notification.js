@@ -67,7 +67,7 @@ notificationRouter.post("/", async (request, response, next) => {
   }
 });
 
-notificationRouter.put("/:id", async (request, response, next) => {
+notificationRouter.patch("/:id", async (request, response, next) => {
   try {
     const { body } = request;
     const id = request?.params?.id;
@@ -88,13 +88,13 @@ notificationRouter.put("/:id", async (request, response, next) => {
     if (!noti) {
       response.status(404).json({ message: "No notification found" })
     }
-    const notiToUpdate = {
-      ...noti._doc,
-      isRead: body.hasOwnProperty("isRead") ? body.isRead : noti.isRead,
-      show: body.hasOwnProperty("show") ? body.show : noti.show,
-    };
-    const updatedNoti = await Notification.findByIdAndUpdate(id, notiToUpdate, {
-      new: true,
+    // const notiToUpdate = {
+    //   ...noti._doc,
+    //   isRead: body.hasOwnProperty("isRead") ? body.isRead : noti.isRead,
+    //   show: body.hasOwnProperty("show") ? body.show : noti.show,
+    // };
+    const updatedNoti = await Notification.findByIdAndUpdate(id, body, {
+      new: true, runValidators: true
     });
     response.json(updatedNoti);
   } catch (err) {

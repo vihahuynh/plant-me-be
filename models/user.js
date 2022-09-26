@@ -9,6 +9,15 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true
   },
+  fullname: {
+    type: String,
+    minlength: 5,
+    trim: true
+  },
+  avatarUrl: {
+    type: String,
+    default: 'http://localhost:3001/photos/default-avatar.png'
+  },
   email: {
     type: String,
     trim: true,
@@ -20,6 +29,24 @@ const userSchema = new mongoose.Schema({
     validate(value) {
       if (!validator.isEmail(value)) {
         throw new Error("email is invalid")
+      }
+    }
+  },
+  phoneNumber: {
+    type: String,
+    trim: true,
+    validate(value) {
+      if (!validator.isMobilePhone(value, "vi-VN")) {
+        throw new Error("phone number is invalid");
+      }
+    },
+  },
+  gender: {
+    type: String,
+    lowercase: true,
+    validate(value) {
+      if (value.lowercase() !== "female" && value.lowercase() !== "male") {
+        throw new Error("gender is invalid")
       }
     }
   },
