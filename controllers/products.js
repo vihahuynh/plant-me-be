@@ -6,7 +6,9 @@ const upload = require("./../utils/uploadImages");
 
 productsRouter.get("/", async (request, response, next) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({}).populate("reviews", {
+      rating: true,
+    });
     response.json(products);
   } catch (err) {
     next(err);
@@ -16,9 +18,11 @@ productsRouter.get("/", async (request, response, next) => {
 productsRouter.get("/:id", async (request, response, next) => {
   try {
     const { id } = request.params;
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate("reviews", {
+      rating: 1,
+    });
     if (!product) {
-      return response.status(404).json({ message: "No product found" })
+      return response.status(404).json({ message: "No product found" });
     }
     response.json(product);
   } catch (err) {

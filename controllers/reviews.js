@@ -9,7 +9,7 @@ reviewRouter.get("/", async (request, response, next) => {
   try {
     const { query } = request;
     const reviews = await Review.find(query)
-      .populate("createdBy", { username: 1 })
+      .populate("createdBy", { username: 1, avatarUrl: 1 })
       .populate("product", { title: 1, images: 1 });
     response.json(reviews);
   } catch (err) {
@@ -26,7 +26,7 @@ reviewRouter.patch("/:id", async (request, response, next) => {
       body,
       {
         new: true,
-        runValidators: true
+        runValidators: true,
       }
     );
 

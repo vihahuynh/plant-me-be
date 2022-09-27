@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
     validate(value) {
-      if (!validator.isMobilePhone(value, "vi-VN")) {
+      if (value && !validator.isMobilePhone(value, "vi-VN")) {
         throw new Error("phone number is invalid");
       }
     },
