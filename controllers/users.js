@@ -1,4 +1,4 @@
-const fs = require("fs").promises;
+const fs = require("fs");
 const bcrypt = require("bcrypt");
 const usersRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
@@ -65,14 +65,13 @@ usersRouter.patch("/:id", async (request, response, next) => {
       "host"
     )}/photos/${id}-avatar.png`;
 
-    delete userToUpdate.avatarUrl;
-
     if (userToUpdate?.avatarUrl) {
       const base64Data = userToUpdate?.avatarUrl?.replace(
         /^data:image\/png;base64,/,
         ""
       );
-      await fs.writeFile(`./photos/${id}-avatar.png`, base64Data, "base64");
+      const buff = Buffer.from(base64Data, 'base64');
+      fs.writeFileSync(`./photos/${id}-avatar.png`, buff, (err) => console.log("err: ", err));
 
       userToUpdate.avatarUrl = url;
     }

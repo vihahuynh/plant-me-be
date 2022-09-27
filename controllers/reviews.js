@@ -20,15 +20,6 @@ reviewRouter.get("/", async (request, response, next) => {
 reviewRouter.patch("/:id", async (request, response, next) => {
   try {
     const { body } = request;
-    // const review = {
-    //   title: body.title,
-    //   content: body.content,
-    //   unlike: body.unlike,
-    //   like: body.like,
-    //   images: body.images,
-    //   createdBy: body.createdBy,
-    //   product: body.product,
-    // };
 
     const updatedReview = await Review.findByIdAndUpdate(
       request.params.id,

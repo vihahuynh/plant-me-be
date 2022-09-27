@@ -9,9 +9,8 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  fullname: {
+  fullName: {
     type: String,
-    minlength: 5,
     trim: true,
   },
   avatarUrl: {

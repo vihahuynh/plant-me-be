@@ -31,11 +31,19 @@ loginRouter.post("/", async (request, response) => {
     expiresIn: 7 * 24 * 60 * 60,
   });
 
-  const { username, email, likedReviews, likedProducts, isAdmin, _id } = user
+  const returnedUser = {
+    ...user._doc,
+    id: user._doc._id.toString(),
+    token
+  }
+
+  delete returnedUser.passwordHash
+  delete returnedUser.__v
+  delete returnedUser._id
 
   response
     .status(200)
-    .send({ token, username, email, likedReviews, likedProducts, isAdmin, id: _id.toString() });
+    .send(returnedUser);
 });
 
 module.exports = loginRouter;
