@@ -8,7 +8,7 @@ productsRouter.get("/", async (request, response, next) => {
   try {
     const products = await Product.find({}).populate("reviews", {
       rating: true,
-    });
+    }).populate("stocks")
     response.json(products);
   } catch (err) {
     next(err);
@@ -20,7 +20,7 @@ productsRouter.get("/:id", async (request, response, next) => {
     const { id } = request.params;
     const product = await Product.findById(id).populate("reviews", {
       rating: 1,
-    });
+    }).populate("stocks")
     if (!product) {
       return response.status(404).json({ message: "No product found" });
     }

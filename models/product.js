@@ -17,8 +17,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    size: [String],
-    colors: [String],
+    // size: [String],
+    // colors: [String],
+    stocks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Stock'
+    }],
     price: {
         type: Number,
         required: true
