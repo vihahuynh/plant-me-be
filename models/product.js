@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 //     salePercent: 25,
 //     rating: 4.3,
@@ -7,94 +7,126 @@ const mongoose = require("mongoose")
 //     soldCount: 345,
 
 const productSchema = new mongoose.Schema({
-    images: {
-        type: [String],
-        required: true
-    },
+  images: {
+    type: [String],
+    required: true,
+  },
 
-    title: {
-        required: true,
+  title: {
+    required: true,
+    type: String,
+    trim: true,
+  },
+  // size: [String],
+  // colors: [String],
+  stocks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Stock",
+    },
+  ],
+  price: {
+    type: Number,
+    required: true,
+  },
+  salePercent: Number,
+  about: String,
+  livingConditions: [
+    {
+      id: {
         type: String,
-        trim: true
+        required: true,
+        trim: true,
+      },
+      title: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      content: {
+        type: String,
+        required: true,
+        trim: true,
+      },
     },
-    // size: [String],
-    // colors: [String],
-    stocks: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Stock'
-    }],
-    price: {
-        type: Number,
-        required: true
+  ],
+  plantCare: [
+    {
+      id: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      title: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      content: {
+        type: String,
+        required: true,
+        trim: true,
+      },
     },
-    salePercent: Number,
-    about: String,
-    livingConditions: [{
-        title: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        content: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-    }],
-    plantCare: [{
-        title: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        content: {
-            type: String,
-            required: true,
-            trim: true
-        },
-    }],
-    commonProblems: [{
-        title: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        content: {
-            type: String,
-            required: true,
-            trim: true
-        },
-    }],
-    decorTips: [{
-        title: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        content: {
-            type: String,
-            required: true,
-            trim: true
-        },
-    }],
-    reviews: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Review'
-    }],
-    createdAt: {
-        type: Date,
-        default: Date.now()
-    }
-})
+  ],
+  commonProblems: [
+    {
+      id: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      title: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      content: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    },
+  ],
+  decorTips: [
+    {
+      id: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      title: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      content: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    },
+  ],
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+});
 
-productSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-    }
-})
+productSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
 
-const Product = mongoose.model('Product', productSchema)
+const Product = mongoose.model("Product", productSchema);
 
-module.exports = Product
+module.exports = Product;
