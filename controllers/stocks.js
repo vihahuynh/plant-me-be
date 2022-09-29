@@ -51,17 +51,6 @@ stockRouter.patch("/:id", async (request, response, next) => {
     try {
         const { id } = request.params
 
-        const decodedToken = request.token
-            ? jwt.verify(request.token, process.env.SECRET)
-            : null;
-        if (!decodedToken?.id) {
-            return response.status(401).json({ err: "token missing or invalid" });
-        }
-        const user = await User.findById(decodedToken.id);
-        if (!user || !user?.isAdmin) {
-            return response.status(403).json({ err: "permission denied" })
-        }
-
         const stock = await Stock.findByIdAndUpdate(id, request.body, { new: true, runValidators: true })
         if (!stock) {
             return response.status(404).json({ err: "No stock found" })
