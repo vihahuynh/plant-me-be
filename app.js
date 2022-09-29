@@ -37,7 +37,7 @@ app.use("/api/products", middleware.tokenExtractor, productsRouter);
 app.use("/api/reviews", middleware.tokenExtractor, reviewsRouter);
 app.use("/api/notification", middleware.tokenExtractor, notificationRouter);
 app.use("/api/orders/", middleware.tokenExtractor, orderRouter);
-app.use("/api/stocks", stockRouter)
+app.use("/api/stocks", middleware.tokenExtractor, stockRouter)
 app.use("/photos", express.static("photos"));
 
 app.use(middleware.unknownEndpoint);
