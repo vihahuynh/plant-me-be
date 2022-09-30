@@ -76,7 +76,6 @@ const userSchema = new mongoose.Schema({
       ref: "Review",
     },
   ],
-
   likedProducts: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -87,6 +86,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  cart: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cart'
+  }
 });
 
 userSchema.set("toJSON", {

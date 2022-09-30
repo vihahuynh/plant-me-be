@@ -9,6 +9,7 @@ const reviewsRouter = require("./controllers/reviews");
 const notificationRouter = require("./controllers/notification");
 const orderRouter = require("./controllers/orders");
 const stockRouter = require("./controllers/stocks")
+const cartRouter = require("./controllers/carts")
 
 const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
@@ -38,6 +39,7 @@ app.use("/api/reviews", middleware.tokenExtractor, reviewsRouter);
 app.use("/api/notification", middleware.tokenExtractor, notificationRouter);
 app.use("/api/orders/", middleware.tokenExtractor, orderRouter);
 app.use("/api/stocks", middleware.tokenExtractor, stockRouter)
+app.use("/api/carts", middleware.tokenExtractor, cartRouter)
 app.use("/photos", express.static("photos"));
 
 app.use(middleware.unknownEndpoint);
