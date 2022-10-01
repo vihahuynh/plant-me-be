@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
@@ -88,9 +90,38 @@ const userSchema = new mongoose.Schema({
   },
   cart: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Cart'
-  }
+    ref: "Cart",
+  },
 });
+
+userSchema.methods.generateAuthToken = async function () {
+  const userForToken = {
+    username: this.username,
+    id: this._id,
+  };
+  const token = jwt.sign(userForToken, process.env.SECRET, {
+    expiresIn: 7 * 24 * 60 * 60,
+  });
+  return token;
+};
+
+userSchema.statics.findByCredentials = async (loginData, password) => {
+  let user;
+  user = await User.findOne({ username: loginData });
+  if (!user) {
+    user = await User.findOne({ email: loginData });
+  }
+  if (!user) {
+    throw new Error("Unable to login");
+  }
+
+  const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
+  if (!passwordCorrect) {
+    throw new Error("Unable to login");
+  }
+
+  return user;
+};
 
 userSchema.set("toJSON", {
   transform: (document, returnedObject) => {
