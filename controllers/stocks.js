@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 stockRouter.get("/", async (request, response, next) => {
   try {
     const { query } = request;
-    console.log("query: ", query);
     const stocks = await Stock.find(query);
     response.json(stocks);
   } catch (err) {
