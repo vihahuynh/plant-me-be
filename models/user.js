@@ -4,6 +4,9 @@ const jwt = require("jsonwebtoken");
 const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
+  googleId: {
+    type: String,
+  },
   username: {
     type: String,
     required: true,
@@ -92,9 +95,11 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Cart",
   },
-  deliveryAddresses: [{
-    address: String
-  }]
+  deliveryAddresses: [
+    {
+      address: String,
+    },
+  ],
 });
 
 userSchema.methods.generateAuthToken = async function () {
