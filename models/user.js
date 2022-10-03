@@ -92,6 +92,9 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Cart",
   },
+  deliveryAddresses: [{
+    address: String
+  }]
 });
 
 userSchema.methods.generateAuthToken = async function () {
