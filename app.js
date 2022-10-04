@@ -15,6 +15,7 @@ const stockRouter = require("./controllers/stocks");
 const cartRouter = require("./controllers/carts");
 const authRouter = require("./controllers/auth");
 const addressRouter = require("./controllers/addresses")
+const passwordResetRouter = require("./controllers/passwordReset")
 
 const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
@@ -22,7 +23,9 @@ const logger = require("./utils/logger");
 logger.info("connecting to", config.MONGODB_URI);
 
 mongoose
-  .connect(config.MONGODB_URI)
+  .connect(config.MONGODB_URI, {
+    useNewUrlParser: true,
+  })
   .then(() => {
     logger.info("connected to MongoDB");
   })
@@ -56,6 +59,7 @@ app.use("/api/orders/", middleware.tokenExtractor, orderRouter);
 app.use("/api/stocks", stockRouter);
 app.use("/api/carts", middleware.tokenExtractor, cartRouter);
 app.use("/api/addresses", middleware.tokenExtractor, addressRouter)
+app.use("/api/password-reset", passwordResetRouter)
 app.use("/api/auth", authRouter);
 app.use("/photos", express.static("photos"));
 
