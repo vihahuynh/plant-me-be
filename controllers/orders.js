@@ -1,19 +1,10 @@
 const orderRouter = require("express").Router();
 const Order = require("./../models/order");
-const User = require("./../models/user");
-const jwt = require("jsonwebtoken");
 
 orderRouter.get("/", async (request, response, next) => {
   try {
     const { query } = request;
-    const decodedToken = request.token
-      ? jwt.verify(request.token, process.env.SECRET)
-      : null;
-
-    if (!decodedToken?.id) {
-      return response.status(401).json({ err: "token missing or invalid" });
-    }
-    const user = await User.findById(decodedToken.id);
+    const user = request.user
     if ((query?.user && query.user === user.id) || user?.isAdmin) {
       const orders = await Order.find(query);
       return response.json(orders);
@@ -26,14 +17,7 @@ orderRouter.get("/", async (request, response, next) => {
 
 orderRouter.get("/:id", async (request, response, next) => {
   try {
-    const decodedToken = request.token
-      ? jwt.verify(request.token, process.env.SECRET)
-      : null;
-
-    if (!decodedToken?.id) {
-      return response.status(401).json({ err: "token missing or invalid" });
-    }
-    const user = await User.findById(decodedToken.id);
+    const user = request.user
     const order = await Order.findById(request.params.id).populate(
       "notification"
     );
@@ -53,17 +37,7 @@ orderRouter.get("/:id", async (request, response, next) => {
 orderRouter.post("/", async (request, response, next) => {
   try {
     const { body } = request;
-    const decodedToken = request.token
-      ? jwt.verify(request.token, process.env.SECRET)
-      : null;
-
-    if (!decodedToken?.id) {
-      return response.status(401).json({ err: "token missing or invalid" });
-    }
-    const user = await User.findById(decodedToken.id);
-    if (!user) {
-      return response.status(402).json({ message: "No user found" });
-    }
+    const user = request.user
 
     const newOrder = new Order(body);
 
@@ -78,18 +52,6 @@ orderRouter.post("/", async (request, response, next) => {
 
 orderRouter.patch("/:id", async (request, response, next) => {
   try {
-    const decodedToken = request.token
-      ? jwt.verify(request.token, process.env.SECRET)
-      : null;
-
-    if (!decodedToken?.id) {
-      return response.status(401).json({ err: "token missing or invalid" });
-    }
-    const user = await User.findById(decodedToken.id);
-    if (!user) {
-      return response.status(402).json({ message: "No user found" });
-    }
-
     const updatedOrder = await Order.findByIdAndUpdate(
       request.params.id,
       request.body,

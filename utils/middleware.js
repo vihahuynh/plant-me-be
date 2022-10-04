@@ -35,6 +35,9 @@ const unknownEndpoint = (request, response) => {
 
 const tokenExtractor = async (request, response, next) => {
     try {
+        // if (request.method === "GET" && request.path.startsWith("/api/products")) {
+        //     next()
+        // }
         const authorization = request.get('authorization')
         if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
             request.token = authorization.substring(7)

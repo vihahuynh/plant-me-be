@@ -1,8 +1,8 @@
 const fs = require("fs");
 const bcrypt = require("bcrypt");
 const usersRouter = require("express").Router();
-const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
+const middleware = require("./../utils/middleware")
 
 usersRouter.post("/", async (request, response, next) => {
   try {
@@ -46,16 +46,10 @@ usersRouter.post("/", async (request, response, next) => {
   }
 });
 
-usersRouter.patch("/:id", async (request, response, next) => {
+usersRouter.patch("/:id", middleware.tokenExtractor, async (request, response, next) => {
   try {
     const { id } = request.params;
-    const decodedToken = request.token
-      ? jwt.verify(request.token, process.env.SECRET)
-      : null;
-    if (!decodedToken?.id) {
-      return response.status(401).json({ err: "token missing or invalid" });
-    }
-    const user = await User.findById(decodedToken.id);
+    const user = request.user
     if (!user) {
       return response.status(404).json({ message: "No user found" });
     }
@@ -89,15 +83,9 @@ usersRouter.patch("/:id", async (request, response, next) => {
   }
 });
 
-usersRouter.get("/", async (request, response, next) => {
+usersRouter.get("/", middleware.tokenExtractor, async (request, response, next) => {
   try {
-    const decodedToken = request.token
-      ? jwt.verify(request.token, process.env.SECRET)
-      : null;
-    if (!decodedToken?.id) {
-      return response.status(401).json({ err: "token missing or invalid" });
-    }
-    const user = await User.findById(decodedToken.id);
+    const user = request.user
     if (user && user.isAdmin) {
       const users = await User.find();
       return response.json(users);

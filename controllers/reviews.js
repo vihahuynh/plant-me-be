@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const reviewRouter = require("express").Router();
 const Review = require("../models/review");
-const User = require("../models/user");
 const Product = require("../models/product");
 const upload = require("../utils/uploadImages");
+const middleware = require("./../utils/middleware")
 
 reviewRouter.get("/", async (request, response, next) => {
   try {
@@ -20,7 +20,6 @@ reviewRouter.get("/", async (request, response, next) => {
 reviewRouter.patch("/:id", async (request, response, next) => {
   try {
     const { body } = request;
-
     const updatedReview = await Review.findByIdAndUpdate(
       request.params.id,
       body,
@@ -38,17 +37,11 @@ reviewRouter.patch("/:id", async (request, response, next) => {
 
 reviewRouter.post(
   "/",
-  upload.array("images"),
+  [middleware.tokenExtractor, upload.array("images")],
   async (request, response, next) => {
     try {
       const newReview = JSON.parse(request.body?.obj);
-      const decodedToken = request.token
-        ? jwt.verify(request.token, process.env.SECRET)
-        : null;
-      if (!decodedToken?.id) {
-        response.status(401).json({ err: "token missing or invalid" });
-      }
-      const user = await User.findById(decodedToken.id);
+      const user = request.user
       const product = await Product.findById(newReview.productId);
 
       const url = request.protocol + "://" + request.get("host");

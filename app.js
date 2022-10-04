@@ -47,13 +47,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/users", middleware.tokenExtractor, userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
-app.use("/api/products", middleware.tokenExtractor, productsRouter);
-app.use("/api/reviews", middleware.tokenExtractor, reviewsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/reviews", reviewsRouter);
 app.use("/api/notification", middleware.tokenExtractor, notificationRouter);
 app.use("/api/orders/", middleware.tokenExtractor, orderRouter);
-app.use("/api/stocks", middleware.tokenExtractor, stockRouter);
+app.use("/api/stocks", stockRouter);
 app.use("/api/carts", middleware.tokenExtractor, cartRouter);
 app.use("/api/addresses", middleware.tokenExtractor, addressRouter)
 app.use("/api/auth", authRouter);

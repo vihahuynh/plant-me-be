@@ -1,8 +1,7 @@
 const productsRouter = require("express").Router();
 const Product = require("./../models/product");
-const User = require("./../models/user");
-const jwt = require("jsonwebtoken");
 const upload = require("./../utils/uploadImages");
+const middleware = require("./../utils/middleware")
 
 productsRouter.get("/", async (request, response, next) => {
   try {
@@ -36,17 +35,11 @@ productsRouter.get("/:id", async (request, response, next) => {
 
 productsRouter.post(
   "/",
-  upload.array("images"),
+  [middleware.tokenExtractor, upload.array("images")],
   async (request, response, next) => {
     try {
+      const user = request.user
       const newProduct = JSON.parse(request.body?.obj);
-      const decodedToken = request.token
-        ? jwt.verify(request.token, process.env.SECRET)
-        : null;
-      if (!decodedToken?.id) {
-        return response.status(401).json({ error: "token missing or invalid" });
-      }
-      const user = await User.findById(decodedToken.id);
 
       if (!user?.isAdmin) {
         return response.status(403).json({ error: "permission denied" });
@@ -69,18 +62,13 @@ productsRouter.post(
 
 productsRouter.patch(
   "/:id",
-  upload.array("images"),
+  [middleware.tokenExtractor, upload.array("images")],
   async (request, response, next) => {
     try {
+      const user = request.user
       const { id } = request.params;
       const productToUpdate = JSON.parse(request.body?.obj);
-      const decodedToken = request.token
-        ? jwt.verify(request.token, process.env.SECRET)
-        : null;
-      if (!decodedToken?.id) {
-        return response.status(401).json({ error: "token missing or invalid" });
-      }
-      const user = await User.findById(decodedToken.id);
+
       if (!user?.isAdmin) {
         return response.status(403).json({ error: "permission denied" });
       }

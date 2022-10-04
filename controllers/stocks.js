@@ -1,8 +1,7 @@
 const stockRouter = require("express").Router();
 const Stock = require("./../models/stock");
-const User = require("./../models/user");
 const Product = require("./../models/product");
-const jwt = require("jsonwebtoken");
+const middleware = require("./../utils/middleware")
 
 stockRouter.get("/", async (request, response, next) => {
   try {
@@ -26,15 +25,9 @@ stockRouter.get("/:id", async (request, response, next) => {
   }
 });
 
-stockRouter.post("/", async (request, response, next) => {
+stockRouter.post("/", middleware.tokenExtractor, async (request, response, next) => {
   try {
-    const decodedToken = request.token
-      ? jwt.verify(request.token, process.env.SECRET)
-      : null;
-    if (!decodedToken?.id) {
-      return response.status(401).json({ err: "token missing or invalid" });
-    }
-    const user = await User.findById(decodedToken.id);
+    const user = request.user
     if (!user || !user?.isAdmin) {
       return response.status(403).json({ err: "permission denied" });
     }
@@ -67,7 +60,6 @@ stockRouter.post("/", async (request, response, next) => {
 stockRouter.patch("/:id", async (request, response, next) => {
   try {
     const { id } = request.params;
-
     const stock = await Stock.findByIdAndUpdate(id, request.body, {
       new: true,
       runValidators: true,
@@ -81,16 +73,10 @@ stockRouter.patch("/:id", async (request, response, next) => {
   }
 });
 
-stockRouter.delete("/:id", async (request, response, next) => {
+stockRouter.delete("/:id", middleware.tokenExtractor, async (request, response, next) => {
   try {
     const { id } = request.params;
-    const decodedToken = request.token
-      ? jwt.verify(request.token, process.env.SECRET)
-      : null;
-    if (!decodedToken?.id) {
-      return response.status(401).json({ err: "token missing or invalid" });
-    }
-    const user = await User.findById(decodedToken.id);
+    const user = request.user
     if (!user || !user?.isAdmin) {
       return response.status(403).json({ err: "permission denied" });
     }
