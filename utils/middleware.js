@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken")
+const User = require("./../models/user")
+
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 
@@ -30,13 +33,26 @@ const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
-const tokenExtractor = (request, response, next) => {
+const tokenExtractor = async (request, response, next) => {
+    try {
+        const authorization = request.get('authorization')
+        if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+            request.token = authorization.substring(7)
+        }
 
-    const authorization = request.get('authorization')
-    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-        request.token = authorization.substring(7)
+        const decodedToken = request.token ? jwt.verify(request.token, process.env.SECRET) : null
+        if (!decodedToken?.id) {
+            return response.status(401).json({ err: "invalid or missing token" })
+        }
+        const user = await User.findById(decodedToken?.id)
+        if (!user) {
+            return response.json(403).json({ err: "permission denied" })
+        }
+        request.user = user
+        next()
+    } catch (err) {
+        next(err)
     }
-    next()
 }
 
 module.exports = { errorHandler, requestLogger, unknownEndpoint, tokenExtractor }

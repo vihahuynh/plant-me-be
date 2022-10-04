@@ -14,6 +14,7 @@ const orderRouter = require("./controllers/orders");
 const stockRouter = require("./controllers/stocks");
 const cartRouter = require("./controllers/carts");
 const authRouter = require("./controllers/auth");
+const addressRouter = require("./controllers/addresses")
 
 const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
@@ -54,6 +55,7 @@ app.use("/api/notification", middleware.tokenExtractor, notificationRouter);
 app.use("/api/orders/", middleware.tokenExtractor, orderRouter);
 app.use("/api/stocks", middleware.tokenExtractor, stockRouter);
 app.use("/api/carts", middleware.tokenExtractor, cartRouter);
+app.use("/api/addresses", middleware.tokenExtractor, addressRouter)
 app.use("/api/auth", authRouter);
 app.use("/photos", express.static("photos"));
 

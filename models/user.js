@@ -97,7 +97,8 @@ const userSchema = new mongoose.Schema({
   },
   deliveryAddresses: [
     {
-      address: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address"
     },
   ],
 });
