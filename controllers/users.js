@@ -2,7 +2,7 @@ const fs = require("fs");
 const bcrypt = require("bcrypt");
 const usersRouter = require("express").Router();
 const User = require("./../models/user");
-const middleware = require("./../utils/middleware")
+const middleware = require("./../utils/middleware");
 
 usersRouter.post("/", async (request, response, next) => {
   try {
@@ -25,7 +25,7 @@ usersRouter.post("/", async (request, response, next) => {
 
     if (existingEmail) {
       return response.status(400).json({
-        error: "Email address is already!",
+        error: "Email address is already exists!",
       });
     }
 
@@ -46,54 +46,64 @@ usersRouter.post("/", async (request, response, next) => {
   }
 });
 
-usersRouter.patch("/:id", middleware.tokenExtractor, async (request, response, next) => {
-  try {
-    const { id } = request.params;
-    const user = request.user
-    if (!user) {
-      return response.status(404).json({ message: "No user found" });
-    }
+usersRouter.patch(
+  "/:id",
+  middleware.tokenExtractor,
+  async (request, response, next) => {
+    try {
+      const { id } = request.params;
+      const user = request.user;
+      if (!user) {
+        return response.status(404).json({ message: "No user found" });
+      }
 
-    const userToUpdate = request.body;
-    const url = `${request.protocol}://${request.get(
-      "host"
-    )}/photos/${id}-avatar.png`;
+      const userToUpdate = request.body;
+      const url = `${request.protocol}://${request.get(
+        "host"
+      )}/photos/${id}-avatar.png`;
 
-    if (userToUpdate?.avatarUrl) {
-      const base64Data = userToUpdate?.avatarUrl?.replace(
-        /^data:image\/png;base64,/,
-        ""
-      );
-      const buff = Buffer.from(base64Data, 'base64');
-      fs.writeFileSync(`./photos/${id}-avatar.png`, buff, (err) => console.log("err: ", err));
+      if (userToUpdate?.avatarUrl) {
+        const base64Data = userToUpdate?.avatarUrl?.replace(
+          /^data:image\/png;base64,/,
+          ""
+        );
+        const buff = Buffer.from(base64Data, "base64");
+        fs.writeFileSync(`./photos/${id}-avatar.png`, buff, (err) =>
+          console.log("err: ", err)
+        );
 
-      userToUpdate.avatarUrl = url;
+        userToUpdate.avatarUrl = url;
+      }
+      if (user.username === userToUpdate.username || user.isAdmin) {
+        const updatedUser = await User.findByIdAndUpdate(id, userToUpdate, {
+          new: true,
+          runValidators: true,
+        });
+        return response.status(200).json(updatedUser);
+      } else {
+        response.status(403).json({ err: "permission denied" });
+      }
+    } catch (err) {
+      next(err);
     }
-    if (user.username === userToUpdate.username || user.isAdmin) {
-      const updatedUser = await User.findByIdAndUpdate(id, userToUpdate, {
-        new: true,
-        runValidators: true,
-      });
-      return response.status(200).json(updatedUser);
-    } else {
-      response.status(403).json({ err: "permission denied" });
-    }
-  } catch (err) {
-    next(err);
   }
-});
+);
 
-usersRouter.get("/", middleware.tokenExtractor, async (request, response, next) => {
-  try {
-    const user = request.user
-    if (user && user.isAdmin) {
-      const users = await User.find();
-      return response.json(users);
+usersRouter.get(
+  "/",
+  middleware.tokenExtractor,
+  async (request, response, next) => {
+    try {
+      const user = request.user;
+      if (user && user.isAdmin) {
+        const users = await User.find();
+        return response.json(users);
+      }
+      return response.status(403).json({ err: "permission denied" });
+    } catch (err) {
+      next(err);
     }
-    return response.status(403).json({ err: "permission denied" });
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 module.exports = usersRouter;
