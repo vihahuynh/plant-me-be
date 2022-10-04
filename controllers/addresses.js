@@ -13,8 +13,14 @@ addressRouter.get("/", async (request, response, next) => {
 
 addressRouter.post("/", async (request, response, next) => {
     try {
-        const newAddress = new Address({ ...request.body, user: request.user.id })
+        const newAddress = new Address({
+            ...request.body,
+            user: request.user.id,
+            isDefault: request.user?.deliveryAddresses?.length === 0 ? true : false
+        })
         const returnedAddress = await newAddress.save()
+        request.user.deliveryAddresses = request.user.deliveryAddresses.concat(returnedAddress._id)
+        await request.user.save()
         response.status(201).json(returnedAddress)
     } catch (err) {
         next(err)

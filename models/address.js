@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const validator = require("validator")
 
 const addressSchema = mongoose.Schema({
     user: {
@@ -11,7 +12,13 @@ const addressSchema = mongoose.Schema({
     },
     phoneNumber: {
         type: String,
-        required: true
+        trim: true,
+        required: true,
+        validate(value) {
+            if (value && !validator.isMobilePhone(value, "vi-VN")) {
+                throw new Error("Phone number is invalid");
+            }
+        },
     },
     name: {
         type: String,

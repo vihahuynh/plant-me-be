@@ -80,7 +80,7 @@ productsRouter.patch(
 
       const url = request.protocol + "://" + request.get("host");
       const newImages = request.files.map((f) => `${url}/photos/${f.filename}`);
-      productToUpdate.images = product.images.concat(newImages);
+      productToUpdate.images = productToUpdate.productImages.concat(newImages);
 
       delete productToUpdate.id;
       const updatedProduct = await Product.findByIdAndUpdate(
