@@ -8,7 +8,7 @@ notificationRouter.get("/", async (request, response, next) => {
     const { query } = request;
     const user = request.user
     if (user?.id === query.user || user.isAdmin) {
-      const notification = await Notification.find(query);
+      const notification = await Notification.find({ ...query, user: user.id });
       return response.json(notification);
     }
     return response.status(403).json({ err: "permission denied" });

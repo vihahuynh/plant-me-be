@@ -6,7 +6,7 @@ orderRouter.get("/", async (request, response, next) => {
     const { query } = request;
     const user = request.user
     if ((query?.user && query.user === user.id) || user?.isAdmin) {
-      const orders = await Order.find(query);
+      const orders = await Order.find({ ...query, user: user.id });
       return response.json(orders);
     }
     return response.status(403).json({ err: "permission denied" });
