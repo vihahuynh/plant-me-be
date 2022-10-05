@@ -18,7 +18,7 @@ passwordResetRouter.post("/", async (request, response, next) => {
         const returnedToken = await newToken.save()
 
         const link = `${process.env.URL}/password-reset/${user._id}/${returnedToken.token}`
-        await sendEmail(user.email, "Password reset", link)
+        await sendEmail(user.email, "[Plantme] Please reset your password", link)
         response.json({ message: "Password reset link had sent to user." })
     } catch (err) {
         next(err)
