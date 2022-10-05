@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const validator = require("validator")
 
-const addressSchema = mongoose.Schema({
+const addressSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
@@ -28,7 +28,7 @@ const addressSchema = mongoose.Schema({
         type: Boolean,
         default: false
     }
-})
+}, { timestamps: true })
 
 addressSchema.set("toJSON", {
     transform: (document, returnedObject) => {

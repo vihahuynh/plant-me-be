@@ -113,11 +113,7 @@ const productSchema = new mongoose.Schema({
       ref: "Review",
     },
   ],
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-});
+}, { timestamps: true });
 
 productSchema.set("toJSON", {
   transform: (document, returnedObject) => {

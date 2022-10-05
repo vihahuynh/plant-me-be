@@ -21,7 +21,7 @@ const stockSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-});
+}, { timestamps: true });
 
 stockSchema.set("toJSON", {
   transform: (document, returnedObject) => {

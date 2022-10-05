@@ -101,7 +101,7 @@ const userSchema = new mongoose.Schema({
       ref: "Address"
     },
   ],
-});
+}, { timestamps: true });
 
 userSchema.methods.generateAuthToken = async function () {
   const userForToken = {

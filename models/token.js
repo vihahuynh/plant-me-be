@@ -11,12 +11,7 @@ const tokenSchema = mongoose.Schema({
         ref: 'User',
         required: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now(),
-        expires: 3600
-    }
-})
+}, { timestamps: true })
 
 tokenSchema.set("toJSON", {
     transform: (document, returnedObject) => {

@@ -76,14 +76,10 @@ const orderSchema = new mongoose.Schema({
   receivedDate: {
     type: Date,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
   estimatedDeliveryDate: Date,
   deliveryMethod: String,
   deliveryCharges: Number,
-});
+}, { timestamps: true });
 
 orderSchema.set("toJSON", {
   transform: (document, returnedObject) => {
