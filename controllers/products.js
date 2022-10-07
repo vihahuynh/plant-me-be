@@ -9,7 +9,8 @@ productsRouter.get("/", async (request, response, next) => {
       .populate("reviews", {
         rating: true,
       })
-      .populate("stocks");
+      .populate("stocks")
+      .exec()
     response.json(products);
   } catch (err) {
     next(err);

@@ -1,7 +1,5 @@
-const jwt = require("jsonwebtoken");
 const reviewRouter = require("express").Router();
 const Review = require("../models/review");
-const Product = require("../models/product");
 const upload = require("../utils/uploadImages");
 const middleware = require("./../utils/middleware")
 
@@ -42,23 +40,20 @@ reviewRouter.post(
     try {
       const newReview = JSON.parse(request.body?.obj);
       const user = request.user
-      const product = await Product.findById(newReview.productId);
 
       const url = request.protocol + "://" + request.get("host");
 
       newReview.images = request.files.map(
         (f) => `${url}/photos/${f.filename}`
       );
-      newReview.user = user._id;
-      newReview.product = product._id;
+      newReview.user = user.id;
+      newReview.product = newReview.productId
 
       const review = new Review(newReview);
 
       const savedReview = await review.save();
       user.reviews = user.reviews.concat(savedReview._id);
       await user.save();
-      product.reviews = product.reviews.concat(savedReview._id);
-      await product.save();
       response.status(201).json(savedReview);
     } catch (err) {
       next(err);

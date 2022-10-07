@@ -19,12 +19,12 @@ const productSchema = new mongoose.Schema({
   },
   // size: [String],
   // colors: [String],
-  stocks: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Stock",
-    },
-  ],
+  // stocks: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Stock",
+  //   },
+  // ],
   price: {
     type: Number,
     required: true,
@@ -107,21 +107,33 @@ const productSchema = new mongoose.Schema({
       },
     },
   ],
-  reviews: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Review",
-    },
-  ],
-}, { timestamps: true });
+  // reviews: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Review",
+  //   },
+  // ],
+}, { timestamps: true, toJSON: { virtuals: true } });
 
-productSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
+productSchema.virtual('stocks', {
+  ref: 'Stock',
+  localField: '_id',
+  foreignField: 'product'
+})
+
+productSchema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'product'
+})
+
+// productSchema.set("toJSON", {
+//   transform: (document, returnedObject) => {
+//     returnedObject.id = returnedObject._id.toString();
+//     delete returnedObject._id;
+//     delete returnedObject.__v;
+//   },
+// });
 
 const Product = mongoose.model("Product", productSchema);
 

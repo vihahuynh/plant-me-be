@@ -1,6 +1,5 @@
 const stockRouter = require("express").Router();
 const Stock = require("./../models/stock");
-const Product = require("./../models/product");
 const middleware = require("./../utils/middleware")
 
 stockRouter.get("/", async (request, response, next) => {
@@ -34,10 +33,6 @@ stockRouter.post("/", middleware.tokenExtractor, async (request, response, next)
 
     const newStock = new Stock(request.body);
     const productId = request.body.product;
-    const product = await Product.findById(productId);
-    if (!product) {
-      return response.status(404).json({ err: "No product found" });
-    }
     const existedStock = await Stock.findOne({
       product: productId,
       color: request.body.color,
@@ -49,8 +44,6 @@ stockRouter.post("/", middleware.tokenExtractor, async (request, response, next)
       });
     }
     const stock = await newStock.save();
-    product.stocks = product.stocks.concat(stock._id);
-    await product.save();
     response.status(201).json(stock);
   } catch (err) {
     next(err);
@@ -85,13 +78,6 @@ stockRouter.delete("/:id", middleware.tokenExtractor, async (request, response, 
     if (!stock) {
       return response.status(404).json({ err: "No stock found" });
     }
-    console.log(stock._id.toString());
-    const product = await Product.findById(stock.product.toString());
-    if (!product) {
-      return response.status(404).json({ err: "No product found" });
-    }
-    product.stocks = product.stocks.filter((s) => s !== id);
-    await product.save();
     await Stock.findByIdAndDelete(id);
     response.status(204).send();
   } catch (err) {
