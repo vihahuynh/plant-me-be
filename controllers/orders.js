@@ -20,7 +20,7 @@ orderRouter.get("/:id", async (request, response, next) => {
     const user = request.user
     const order = await Order.findById(request.params.id).populate(
       "notification"
-    );
+    ).exec()
 
     if (order?.user.toString() === user?.id || user.isAdmin) {
       return response.json(order);

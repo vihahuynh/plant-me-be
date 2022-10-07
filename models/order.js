@@ -7,12 +7,6 @@ const orderSchema = new mongoose.Schema({
     ref: "User",
     require: true,
   },
-  // notification: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "Notification",
-  //   },
-  // ],
   cart: [
     {
       image: String,
@@ -80,6 +74,12 @@ const orderSchema = new mongoose.Schema({
   deliveryMethod: String,
   deliveryCharges: Number,
 });
+
+orderSchema.virtual('notification', {
+  ref: 'Notification',
+  localField: '_id',
+  foreignField: 'order'
+})
 
 orderSchema.set("toJSON", {
   timestamps: true,

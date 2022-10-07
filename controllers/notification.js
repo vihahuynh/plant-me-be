@@ -17,42 +17,25 @@ notificationRouter.get("/", async (request, response, next) => {
   }
 });
 
+const saveNoti = async (notiData) => {
+  const newNoti = new Notification(notiData);
+  const returnedNoti = await newNoti.save();
+  return returnedNoti
+}
+
 notificationRouter.post("/", async (request, response, next) => {
   try {
-    let newNoti;
     const { body } = request;
-    const user = request.user
     if (body?.order) {
       const order = await Order.findById(body.order);
       if (order?.user.toString() === body?.user) {
-        newNoti = new Notification({
-          content: body.content,
-          user: body.user,
-          order: order._id.toString(),
-        });
-        const returnedNoti = await newNoti.save();
-        if (order) {
-          order.notification = order.notification.concat(returnedNoti._id);
-          await order.save();
-        }
-        if (user) {
-          user.notification = user.notification.concat(returnedNoti._id);
-          await user.save();
-        }
+        const returnedNoti = await saveNoti(body)
         return response.json(returnedNoti);
       } else {
         return response.status(400).json({ err: "wrong userId or orderId" });
       }
     }
-    newNoti = new Notification({
-      content: body.content,
-      user: body.user,
-    });
-    const returnedNoti = await newNoti.save();
-    if (user) {
-      user.notification = user.notification.concat(returnedNoti._id);
-      await user.save();
-    }
+    const returnedNoti = await saveNoti(body)
     response.status(201).json(returnedNoti);
   } catch (err) {
     next(err);
