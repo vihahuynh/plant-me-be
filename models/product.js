@@ -6,111 +6,113 @@ const mongoose = require("mongoose");
 //     reviewCount: 33,
 //     soldCount: 345,
 
-const productSchema = new mongoose.Schema({
-  images: {
-    type: [String],
-    required: true,
-  },
+const productSchema = new mongoose.Schema(
+  {
+    images: {
+      type: [String],
+      required: true,
+    },
 
-  title: {
-    required: true,
-    type: String,
-    trim: true,
+    title: {
+      required: true,
+      type: String,
+      trim: true,
+    },
+    // size: [String],
+    // colors: [String],
+    // stocks: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Stock",
+    //   },
+    // ],
+    price: {
+      type: Number,
+      required: true,
+    },
+    salePercent: Number,
+    about: String,
+    livingConditions: [
+      {
+        id: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        title: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        content: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+      },
+    ],
+    plantCare: [
+      {
+        id: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        title: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        content: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+      },
+    ],
+    commonProblems: [
+      {
+        id: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        title: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        content: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+      },
+    ],
+    decorTips: [
+      {
+        id: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        title: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        content: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+      },
+    ],
   },
-  // size: [String],
-  // colors: [String],
-  // stocks: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "Stock",
-  //   },
-  // ],
-  price: {
-    type: Number,
-    required: true,
-  },
-  salePercent: Number,
-  about: String,
-  livingConditions: [
-    {
-      id: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      title: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      content: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-    },
-  ],
-  plantCare: [
-    {
-      id: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      title: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      content: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-    },
-  ],
-  commonProblems: [
-    {
-      id: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      title: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      content: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-    },
-  ],
-  decorTips: [
-    {
-      id: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      title: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      content: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-    },
-  ],
-});
+  { timestamps: true }
+);
 
 productSchema.set("toJSON", {
-  timestamps: true,
   virtuals: true,
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
@@ -119,17 +121,17 @@ productSchema.set("toJSON", {
   },
 });
 
-productSchema.virtual('stocks', {
-  ref: 'Stock',
-  localField: '_id',
-  foreignField: 'product'
-})
+productSchema.virtual("stocks", {
+  ref: "Stock",
+  localField: "_id",
+  foreignField: "product",
+});
 
-productSchema.virtual('reviews', {
-  ref: 'Review',
-  localField: '_id',
-  foreignField: 'product'
-})
+productSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "product",
+});
 
 const Product = mongoose.model("Product", productSchema);
 

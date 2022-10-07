@@ -1,26 +1,27 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const tokenSchema = mongoose.Schema({
+const tokenSchema = mongoose.Schema(
+  {
     token: {
-        type: String,
-        required: true,
-
+      type: String,
+      required: true,
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-})
+  },
+  { timestamps: true }
+);
 
 tokenSchema.set("toJSON", {
-    timestamps: true,
-    virtuals: true,
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
-        delete returnedObject._id;
-        delete returnedObject.__v;
-    },
+  virtuals: true,
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
 });
 
 const Token = mongoose.model("Token", tokenSchema);

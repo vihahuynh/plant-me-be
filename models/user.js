@@ -3,81 +3,84 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 
-const userSchema = new mongoose.Schema({
-  googleId: {
-    type: String,
-  },
-  username: {
-    type: String,
-    required: true,
-    minlength: 5,
-    unique: true,
-    trim: true,
-  },
-  fullName: {
-    type: String,
-    trim: true,
-  },
-  avatarUrl: {
-    type: String,
-    default: "http://localhost:3001/photos/default-avatar.png",
-  },
-  email: {
-    type: String,
-    trim: true,
-    lowercase: true,
-    unique: true,
-    required: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("email is invalid");
-      }
+const userSchema = new mongoose.Schema(
+  {
+    googleId: {
+      type: String,
     },
-  },
-  phoneNumber: {
-    type: String,
-    trim: true,
-    validate(value) {
-      if (value && !validator.isMobilePhone(value, "vi-VN")) {
-        throw new Error("phone number is invalid");
-      }
+    username: {
+      type: String,
+      required: true,
+      minlength: 5,
+      unique: true,
+      trim: true,
     },
-  },
-  gender: {
-    type: String,
-    lowercase: true,
-    validate(value) {
-      if (
-        value &&
-        value.toLowerCase() !== "female" &&
-        value.toLowerCase() !== "male"
-      ) {
-        throw new Error("gender is invalid");
-      }
+    fullName: {
+      type: String,
+      trim: true,
     },
-  },
-  passwordHash: String,
-  likedReviews: [
-    {
+    avatarUrl: {
+      type: String,
+      default: "http://localhost:3001/photos/default-avatar.png",
+    },
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      unique: true,
+      required: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("email is invalid");
+        }
+      },
+    },
+    phoneNumber: {
+      type: String,
+      trim: true,
+      validate(value) {
+        if (value && !validator.isMobilePhone(value, "vi-VN")) {
+          throw new Error("phone number is invalid");
+        }
+      },
+    },
+    gender: {
+      type: String,
+      lowercase: true,
+      validate(value) {
+        if (
+          value &&
+          value.toLowerCase() !== "female" &&
+          value.toLowerCase() !== "male"
+        ) {
+          throw new Error("gender is invalid");
+        }
+      },
+    },
+    passwordHash: String,
+    likedReviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+    likedProducts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    cart: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Review",
+      ref: "Cart",
     },
-  ],
-  likedProducts: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-    },
-  ],
-  isAdmin: {
-    type: Boolean,
-    default: false,
   },
-  cart: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Cart",
-  }
-});
+  { timestamps: true }
+);
 
 userSchema.methods.generateAuthToken = async function () {
   const userForToken = {
@@ -108,32 +111,31 @@ userSchema.statics.findByCredentials = async (loginData, password) => {
   return user;
 };
 
-userSchema.virtual('reviews', {
-  ref: 'Review',
-  localField: '_id',
-  foreignField: 'user'
-})
+userSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "user",
+});
 
-userSchema.virtual('orders', {
-  ref: 'Order',
-  localField: '_id',
-  foreignField: 'user'
-})
+userSchema.virtual("orders", {
+  ref: "Order",
+  localField: "_id",
+  foreignField: "user",
+});
 
-userSchema.virtual('notification', {
-  ref: 'Notification',
-  localField: '_id',
-  foreignField: 'user'
-})
+userSchema.virtual("notification", {
+  ref: "Notification",
+  localField: "_id",
+  foreignField: "user",
+});
 
-userSchema.virtual('deliveryAddresses', {
-  ref: 'Address',
-  localField: '_id',
-  foreignField: 'user'
-})
+userSchema.virtual("deliveryAddresses", {
+  ref: "Address",
+  localField: "_id",
+  foreignField: "user",
+});
 
 userSchema.set("toJSON", {
-  timestamps: true,
   virtuals: true,
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();

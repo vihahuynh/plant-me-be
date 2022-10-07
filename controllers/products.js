@@ -1,22 +1,21 @@
 const productsRouter = require("express").Router();
 const Product = require("./../models/product");
 const upload = require("./../utils/uploadImages");
-const middleware = require("./../utils/middleware")
+const middleware = require("./../utils/middleware");
 
 productsRouter.get("/", async (request, response, next) => {
   try {
-    const { sortBy, skip, limit, ...filters } = request.query
-    const parts = sortBy?.split(":")
-    const products = await Product
-      .find(filters)
-      .sort([[parts?.[0], parts?.[1] === 'desc' ? -1 : 1]])
+    const { sortBy, skip, limit, ...filters } = request.query;
+    const parts = sortBy?.split(":");
+    const products = await Product.find(filters)
+      .sort([[parts?.[0], parts?.[1] === "desc" ? -1 : 1]])
       .skip(parseInt(skip))
       .limit(parseInt(limit))
       .populate("reviews", {
         rating: true,
       })
       .populate("stocks")
-      .exec()
+      .exec();
     response.json(products);
   } catch (err) {
     next(err);
@@ -27,10 +26,9 @@ productsRouter.get("/:id", async (request, response, next) => {
   try {
     const { id } = request.params;
     const product = await Product.findById(id)
-      .populate("reviews", {
-        rating: 1,
-      })
-      .populate("stocks");
+      .populate("reviews")
+      .populate("stocks")
+      .exec();
     if (!product) {
       return response.status(404).json({ message: "No product found" });
     }
@@ -45,7 +43,7 @@ productsRouter.post(
   [middleware.tokenExtractor, upload.array("images")],
   async (request, response, next) => {
     try {
-      const user = request.user
+      const user = request.user;
       const newProduct = JSON.parse(request.body?.obj);
 
       if (!user?.isAdmin) {
@@ -72,7 +70,7 @@ productsRouter.patch(
   [middleware.tokenExtractor, upload.array("images")],
   async (request, response, next) => {
     try {
-      const user = request.user
+      const user = request.user;
       const { id } = request.params;
       const productToUpdate = JSON.parse(request.body?.obj);
 
