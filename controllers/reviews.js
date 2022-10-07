@@ -52,8 +52,6 @@ reviewRouter.post(
       const review = new Review(newReview);
 
       const savedReview = await review.save();
-      user.reviews = user.reviews.concat(savedReview._id);
-      await user.save();
       response.status(201).json(savedReview);
     } catch (err) {
       next(err);

@@ -57,24 +57,6 @@ const userSchema = new mongoose.Schema({
     },
   },
   passwordHash: String,
-  reviews: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Review",
-    },
-  ],
-  notification: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Notification",
-    },
-  ],
-  orders: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Order",
-    },
-  ],
   likedReviews: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -94,13 +76,7 @@ const userSchema = new mongoose.Schema({
   cart: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Cart",
-  },
-  deliveryAddresses: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Address"
-    },
-  ],
+  }
 });
 
 userSchema.methods.generateAuthToken = async function () {
@@ -131,6 +107,30 @@ userSchema.statics.findByCredentials = async (loginData, password) => {
 
   return user;
 };
+
+userSchema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'user'
+})
+
+userSchema.virtual('orders', {
+  ref: 'Order',
+  localField: '_id',
+  foreignField: 'user'
+})
+
+userSchema.virtual('notification', {
+  ref: 'Notification',
+  localField: '_id',
+  foreignField: 'user'
+})
+
+userSchema.virtual('deliveryAddresses', {
+  ref: 'Address',
+  localField: '_id',
+  foreignField: 'user'
+})
 
 userSchema.set("toJSON", {
   timestamps: true,

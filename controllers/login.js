@@ -6,7 +6,7 @@ loginRouter.post("/", async (request, response) => {
     const user = await User.findByCredentials(
       request.body.loginData,
       request.body.password
-    );
+    )
     const token = await user.generateAuthToken();
 
     const returnedUser = {
@@ -14,8 +14,6 @@ loginRouter.post("/", async (request, response) => {
       id: user._doc._id.toString(),
       token,
     };
-
-    console.log(returnedUser);
 
     delete returnedUser.passwordHash;
     delete returnedUser.__v;

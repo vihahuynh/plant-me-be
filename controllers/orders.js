@@ -37,13 +37,10 @@ orderRouter.get("/:id", async (request, response, next) => {
 orderRouter.post("/", async (request, response, next) => {
   try {
     const { body } = request;
-    const user = request.user
 
     const newOrder = new Order(body);
 
     const returedOrder = await newOrder.save();
-    user.orders = user.orders.concat(returedOrder._id);
-    await user.save();
     return response.status(201).json(returedOrder);
   } catch (err) {
     next(err);

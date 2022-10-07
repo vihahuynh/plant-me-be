@@ -19,8 +19,6 @@ addressRouter.post("/", async (request, response, next) => {
             isDefault: request.user?.deliveryAddresses?.length === 0 ? true : false
         })
         const returnedAddress = await newAddress.save()
-        request.user.deliveryAddresses = request.user.deliveryAddresses.concat(returnedAddress._id)
-        await request.user.save()
         response.status(201).json(returnedAddress)
     } catch (err) {
         next(err)
@@ -53,8 +51,6 @@ addressRouter.delete("/:id", async (request, response, next) => {
             response.status(403).json({ err: "permission denied" })
         }
         await Address.findByIdAndDelete(request.params.id)
-        request.user.deliveryAddresses = request.user.deliveryAddresses.filter(address => address !== request.params.id)
-        await request.user.save()
         response.status(204).send()
     } catch (err) {
         next(err)
