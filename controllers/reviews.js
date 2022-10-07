@@ -1,12 +1,17 @@
 const reviewRouter = require("express").Router();
+const { query } = require("express");
 const Review = require("../models/review");
 const upload = require("../utils/uploadImages");
 const middleware = require("./../utils/middleware")
 
 reviewRouter.get("/", async (request, response, next) => {
   try {
-    const { query } = request;
-    const reviews = await Review.find(query)
+    const { sortBy, skip, limit, ...filters } = request.query
+    if (filters.images) {
+      filters['images.1'] = { $exists: filters.images.toLowerCase() === "yes" }
+      delete filters.images
+    }
+    const reviews = await Review.find(filters)
       .populate("createdBy", { username: 1, avatarUrl: 1 })
       .populate("product", { title: 1, images: 1 })
     response.json(reviews);
