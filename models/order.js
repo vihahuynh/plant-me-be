@@ -32,7 +32,7 @@ const orderSchema = new mongoose.Schema({
         require: true,
       },
       discount: Number,
-      id: {
+      product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
       },

@@ -1,6 +1,5 @@
 const addressRouter = require("express").Router()
 const Address = require("./../models/address")
-const User = require("./../models/user")
 
 addressRouter.get("/", async (request, response, next) => {
     try {
