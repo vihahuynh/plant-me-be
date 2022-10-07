@@ -101,7 +101,7 @@ const userSchema = new mongoose.Schema({
       ref: "Address"
     },
   ],
-}, { timestamps: true });
+});
 
 userSchema.methods.generateAuthToken = async function () {
   const userForToken = {
@@ -133,11 +133,12 @@ userSchema.statics.findByCredentials = async (loginData, password) => {
 };
 
 userSchema.set("toJSON", {
+  timestamps: true,
+  virtuals: true,
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
-    delete returnedObject.passwordHash;
   },
 });
 

@@ -21,9 +21,11 @@ const stockSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-}, { timestamps: true });
+});
 
 stockSchema.set("toJSON", {
+  timestamps: true,
+  virtuals: true,
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;

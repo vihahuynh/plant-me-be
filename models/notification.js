@@ -30,14 +30,15 @@ const notificationSchema = mongoose.Schema({
     type: Boolean,
     default: true,
   },
-}, { timestamps: true });
+});
 
 notificationSchema.set("toJSON", {
+  timestamps: true,
+  virtuals: true,
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
-    delete returnedObject.passwordHash;
   },
 });
 

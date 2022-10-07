@@ -31,9 +31,11 @@ const reviewSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-}, { timestamps: true });
+});
 
 reviewSchema.set("toJSON", {
+  timestamps: true,
+  virtuals: true,
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;

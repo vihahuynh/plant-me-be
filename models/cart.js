@@ -56,14 +56,15 @@ const cartSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     }
-}, { timestamps: true })
+})
 
 cartSchema.set("toJSON", {
+    timestamps: true,
+    virtuals: true,
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;
         delete returnedObject.__v;
-        delete returnedObject.passwordHash;
     },
 });
 

@@ -11,9 +11,11 @@ const tokenSchema = mongoose.Schema({
         ref: 'User',
         required: true
     },
-}, { timestamps: true })
+})
 
 tokenSchema.set("toJSON", {
+    timestamps: true,
+    virtuals: true,
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;

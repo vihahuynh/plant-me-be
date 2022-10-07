@@ -7,12 +7,12 @@ const orderSchema = new mongoose.Schema({
     ref: "User",
     require: true,
   },
-  notification: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Notification",
-    },
-  ],
+  // notification: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Notification",
+  //   },
+  // ],
   cart: [
     {
       image: String,
@@ -79,14 +79,15 @@ const orderSchema = new mongoose.Schema({
   estimatedDeliveryDate: Date,
   deliveryMethod: String,
   deliveryCharges: Number,
-}, { timestamps: true });
+});
 
 orderSchema.set("toJSON", {
+  timestamps: true,
+  virtuals: true,
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
-    delete returnedObject.passwordHash;
   },
 });
 

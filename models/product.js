@@ -107,13 +107,17 @@ const productSchema = new mongoose.Schema({
       },
     },
   ],
-  // reviews: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "Review",
-  //   },
-  // ],
-}, { timestamps: true, toJSON: { virtuals: true } });
+});
+
+productSchema.set("toJSON", {
+  timestamps: true,
+  virtuals: true,
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
 
 productSchema.virtual('stocks', {
   ref: 'Stock',
@@ -126,14 +130,6 @@ productSchema.virtual('reviews', {
   localField: '_id',
   foreignField: 'product'
 })
-
-// productSchema.set("toJSON", {
-//   transform: (document, returnedObject) => {
-//     returnedObject.id = returnedObject._id.toString();
-//     delete returnedObject._id;
-//     delete returnedObject.__v;
-//   },
-// });
 
 const Product = mongoose.model("Product", productSchema);
 

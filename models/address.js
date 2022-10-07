@@ -28,14 +28,15 @@ const addressSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-}, { timestamps: true })
+})
 
 addressSchema.set("toJSON", {
+    timestamps: true,
+    virtuals: true,
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;
         delete returnedObject.__v;
-        delete returnedObject.passwordHash;
     },
 });
 
