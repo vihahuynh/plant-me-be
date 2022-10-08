@@ -11,6 +11,7 @@ reviewRouter.get("/", async (request, response, next) => {
       delete filters.images;
     }
     const sorts = sortBy?.split(":");
+    console.log(filters);
     const reviews = await Review.find(filters)
       .sort([[sorts?.[0], sorts?.[1] === "desc" ? -1 : 1]])
       .limit(parseInt(limit))
