@@ -3,10 +3,14 @@ const Order = require("./../models/order");
 
 orderRouter.get("/", async (request, response, next) => {
   try {
-    const { query } = request;
+    const { sortBy, limit, skip, ...filters } = request.query
+    const sorts = sortBy?.split(":");
     const user = request.user
-    if ((query?.user && query.user === user.id) || user?.isAdmin) {
-      const orders = await Order.find({ ...query, user: user.id });
+    if ((filters?.user && filters.user === user.id) || user?.isAdmin) {
+      const orders = await Order.find(filters)
+        .sort([[sorts?.[0], sorts?.[1] === "desc" ? -1 : 1]])
+        .limit(limit)
+        .skip(skip)
       return response.json(orders);
     }
     return response.status(403).json({ err: "permission denied" });

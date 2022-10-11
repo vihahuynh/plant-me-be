@@ -6,9 +6,9 @@ const middleware = require("./../utils/middleware");
 productsRouter.get("/", async (request, response, next) => {
   try {
     const { sortBy, skip, limit, ...filters } = request.query;
-    const parts = sortBy?.split(":");
+    const sorts = sortBy?.split(":");
     const products = await Product.find(filters)
-      .sort([[parts?.[0], parts?.[1] === "desc" ? -1 : 1]])
+      .sort([[sorts?.[0], sorts?.[1] === "desc" ? -1 : 1]])
       .skip(parseInt(skip))
       .limit(parseInt(limit))
       .populate("reviews", {

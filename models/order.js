@@ -54,6 +54,14 @@ const orderSchema = new mongoose.Schema(
         }
       },
     },
+    totalDiscount: {
+      type: Number,
+      required: true
+    },
+    totalPayment: {
+      type: Number,
+      required: true
+    },
     receiverName: {
       type: String,
       require: true,
