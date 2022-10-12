@@ -32,25 +32,31 @@ const productSchema = new mongoose.Schema(
     },
     salePercent: Number,
     about: String,
-    livingConditions: [
-      {
-        id: {
-          type: String,
-          required: true,
-          trim: true,
-        },
-        title: {
-          type: String,
-          required: true,
-          trim: true,
-        },
-        content: {
-          type: String,
-          required: true,
-          trim: true,
-        },
-      },
-    ],
+    // livingConditions: [
+    //   {
+    //     id: {
+    //       type: String,
+    //       required: true,
+    //       trim: true,
+    //     },
+    //     title: {
+    //       type: String,
+    //       required: true,
+    //       trim: true,
+    //     },
+    //     content: {
+    //       type: String,
+    //       required: true,
+    //       trim: true,
+    //     },
+    //   },
+    // ],
+    watering: String,
+    light: String,
+    idealLocation: [String],
+    whereToGrow: [String],
+    specialFeatures: [String],
+    category: String,
     plantCare: [
       {
         id: {
