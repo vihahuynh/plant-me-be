@@ -4,11 +4,11 @@ const Order = require("./../models/order");
 orderRouter.get("/", async (request, response, next) => {
   try {
     const { sortBy, limit, skip, ...filters } = request.query
-    const sorts = sortBy?.split(":");
+    const sorts = sortBy?.split(":") || 'createdAt:desc'.split(":")
     const user = request.user
     if ((filters?.user && filters.user === user.id) || user?.isAdmin) {
       const orders = await Order.find(filters)
-        .sort([[sorts?.[0], sorts?.[1] === "desc" ? -1 : 1]])
+        .sort([[sorts[0], sorts[1] === "desc" ? -1 : 1]])
         .limit(limit)
         .skip(skip)
       return response.json(orders);
@@ -41,9 +41,7 @@ orderRouter.get("/:id", async (request, response, next) => {
 orderRouter.post("/", async (request, response, next) => {
   try {
     const { body } = request;
-
     const newOrder = new Order(body);
-
     const returedOrder = await newOrder.save();
     return response.status(201).json(returedOrder);
   } catch (err) {

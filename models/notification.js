@@ -19,7 +19,7 @@ const notificationSchema = mongoose.Schema(
     url: String,
     type: {
       type: String,
-      default: "order",
+      default: "general",
       trim: true,
       lowercase: true,
     },

@@ -10,9 +10,9 @@ reviewRouter.get("/", async (request, response, next) => {
       filters["images.1"] = { $exists: filters.images.toLowerCase() === "yes" };
       delete filters.images;
     }
-    const sorts = sortBy?.split(":");
+    const sorts = sortBy?.split(":") || 'createdAt:desc'.split(":")
     const reviews = await Review.find(filters)
-      .sort([[sorts?.[0], sorts?.[1] === "desc" ? -1 : 1]])
+      .sort([[sorts[0], sorts[1] === "desc" ? -1 : 1]])
       .limit(parseInt(limit))
       .skip(parseInt(skip))
       .populate("createdBy", { username: 1, avatarUrl: 1 })

@@ -5,10 +5,14 @@ const Order = require("./../models/order");
 
 notificationRouter.get("/", async (request, response, next) => {
   try {
-    const { query } = request;
+    const { sortBy, limit, skip, ...filters } = request.query
     const user = request.user
-    if (user?.id === query.user || user.isAdmin) {
-      const notification = await Notification.find({ ...query, user: user.id });
+    const sorts = sortBy?.split(":") || 'createdAt:desc'.split(":")
+    if (user?.id === filters.user || user.isAdmin) {
+      const notification = await Notification.find(filters)
+        .sort([[sorts[0], sorts[1] === 'desc' ? -1 : 1]])
+        .limit(limit)
+        .skip(skip)
       return response.json(notification);
     }
     return response.status(403).json({ err: "permission denied" });
