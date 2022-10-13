@@ -56,7 +56,7 @@ const productSchema = new mongoose.Schema(
     idealLocation: [String],
     whereToGrow: [String],
     specialFeatures: [String],
-    category: String,
+    typeOfPlants: [String],
     plantCare: [
       {
         id: {
