@@ -13,8 +13,8 @@ reviewRouter.get("/", async (request, response, next) => {
     const sorts = sortBy?.split(":") || 'createdAt:desc'.split(":")
     const reviews = await Review.find(filters)
       .sort([[sorts[0], sorts[1] === "desc" ? -1 : 1]])
-      .limit(parseInt(limit))
       .skip(parseInt(skip))
+      .limit(parseInt(limit))
       .populate("createdBy", { username: 1, avatarUrl: 1 })
       .populate("product", { title: 1, images: 1 });
     response.json(reviews);

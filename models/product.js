@@ -1,11 +1,4 @@
 const mongoose = require("mongoose");
-
-//     salePercent: 25,
-//     rating: 4.3,
-//     ratingCount: 173,
-//     reviewCount: 33,
-//     soldCount: 345,
-
 const productSchema = new mongoose.Schema(
   {
     images: {
@@ -18,39 +11,12 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    // size: [String],
-    // colors: [String],
-    // stocks: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Stock",
-    //   },
-    // ],
     price: {
       type: Number,
       required: true,
     },
     salePercent: Number,
     about: String,
-    // livingConditions: [
-    //   {
-    //     id: {
-    //       type: String,
-    //       required: true,
-    //       trim: true,
-    //     },
-    //     title: {
-    //       type: String,
-    //       required: true,
-    //       trim: true,
-    //     },
-    //     content: {
-    //       type: String,
-    //       required: true,
-    //       trim: true,
-    //     },
-    //   },
-    // ],
     watering: String,
     light: String,
     idealLocation: [String],
