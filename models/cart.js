@@ -38,7 +38,7 @@ const cartSchema = new mongoose.Schema(
           require: true,
         },
         salePercent: Number,
-        deliveryCharge: Number,
+        // deliveryCharge: Number,
         discount: Number,
         product: {
           type: mongoose.Schema.Types.ObjectId,

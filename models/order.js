@@ -56,11 +56,11 @@ const orderSchema = new mongoose.Schema(
     },
     totalDiscount: {
       type: Number,
-      required: true
+      required: true,
     },
     totalPayment: {
       type: Number,
-      required: true
+      required: true,
     },
     receiverName: {
       type: String,
