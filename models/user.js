@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "http://localhost:3001/photos/default-avatar.png",
     },
+    subscribed: {
+      type: Boolean,
+      default: false
+    },
     email: {
       type: String,
       trim: true,

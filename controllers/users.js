@@ -46,6 +46,16 @@ usersRouter.post("/", async (request, response, next) => {
   }
 });
 
+usersRouter.patch("/me/subscribe", middleware.tokenExtractor, async (request, response, next) => {
+  try {
+    request.user.subscribed = request.body.subscribed
+    const updatedUser = await request.user.save()
+    response.json(updatedUser)
+  } catch (err) {
+    next(err)
+  }
+})
+
 usersRouter.patch(
   "/:id",
   middleware.tokenExtractor,
