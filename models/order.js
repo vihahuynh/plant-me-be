@@ -76,6 +76,17 @@ const orderSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    progress: [{
+      title: {
+        type: String,
+        required: true
+      },
+      description: String,
+      createdAt: {
+        type: Date,
+        default: Date.now()
+      }
+    }],
     receivedDate: {
       type: Date,
     },
