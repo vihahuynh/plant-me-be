@@ -16,6 +16,7 @@ const orderSchema = new mongoose.Schema(
           require: true,
           trim: true,
         },
+        salePercent: Number,
         color: {
           type: String,
           required: true,
