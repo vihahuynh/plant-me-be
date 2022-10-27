@@ -1,10 +1,10 @@
 const nodemailer = require("nodemailer")
-const logger = require("./../utils/logger")
+const logger = require("./logger")
 const handlebars = require("handlebars")
 const fs = require("fs")
 const path = require("path")
 
-const sendEmail = async (email, subject, link) => {
+const sendPasswordResetEmail = async (email, subject, link) => {
     try {
         const filePath = path.join(__dirname, '../emails/password-reset.html');
         const source = fs.readFileSync(filePath, 'utf-8').toString();
@@ -33,4 +33,4 @@ const sendEmail = async (email, subject, link) => {
     }
 }
 
-module.exports = sendEmail
+module.exports = sendPasswordResetEmail

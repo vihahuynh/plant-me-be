@@ -3,7 +3,7 @@ const User = require("./../models/user");
 const Token = require("./../models/token");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
-const sendEmail = require("../utils/sendEmail");
+const sendPasswordResetEmail = require("../utils/sendPasswordResetEmail");
 
 passwordResetRouter.post("/", async (request, response, next) => {
   try {
@@ -18,7 +18,7 @@ passwordResetRouter.post("/", async (request, response, next) => {
     const returnedToken = await newToken.save();
 
     const link = `${process.env.URL}/password-reset/${user._id}/${returnedToken.token}`;
-    await sendEmail(user.email, "[Plantme] Please reset your password", link);
+    await sendPasswordResetEmail(user.email, "[Plantme] Please reset your password", link);
     response.json({ message: "Password reset link had sent to user." });
   } catch (err) {
     next(err);
@@ -49,11 +49,9 @@ passwordResetRouter.post("/:userId/:token", async (request, response, next) => {
     // if (now - tokenCreatedAt < 3600000) {
     //     return response.status(400).json({ err: "Invalid link or expired - token" })
     // }
-    console.log(user.passwordHash);
     const saltRounds = 10;
     user.passwordHash = await bcrypt.hash(request.body.password, saltRounds);
     await user.save();
-    console.log(user.passwordHash);
     await token.remove();
     response.json({ message: "Password reset successfully." });
   } catch (err) {
