@@ -46,15 +46,19 @@ usersRouter.post("/", async (request, response, next) => {
   }
 });
 
-usersRouter.patch("/me/subscribe", middleware.tokenExtractor, async (request, response, next) => {
-  try {
-    request.user.subscribed = request.body.subscribed
-    const updatedUser = await request.user.save()
-    response.json(updatedUser)
-  } catch (err) {
-    next(err)
+usersRouter.patch(
+  "/me/subscribe",
+  middleware.tokenExtractor,
+  async (request, response, next) => {
+    try {
+      request.user.subscribed = request.body.subscribed;
+      const updatedUser = await request.user.save();
+      response.json(updatedUser);
+    } catch (err) {
+      next(err);
+    }
   }
-})
+);
 
 usersRouter.patch(
   "/:id",
@@ -68,6 +72,7 @@ usersRouter.patch(
       }
 
       const userToUpdate = request.body;
+      console.log("userToUpdate: ", userToUpdate);
       const url = `${request.protocol}://${request.get(
         "host"
       )}/photos/${id}-avatar.png`;
@@ -84,6 +89,8 @@ usersRouter.patch(
 
         userToUpdate.avatarUrl = url;
       }
+      console.log("userToUpdate: ", userToUpdate.username);
+      console.log("user: ", user.username);
       if (user.username === userToUpdate.username || user.isAdmin) {
         const updatedUser = await User.findByIdAndUpdate(id, userToUpdate, {
           new: true,
