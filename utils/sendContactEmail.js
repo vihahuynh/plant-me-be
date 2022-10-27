@@ -24,7 +24,7 @@ const sendContactEmail = async (name, email, content) => {
         await transporter.sendMail({
             from: process.env.USER,
             to: "huynhviha1703@gmail.com",
-            subject: "User contact email",
+            subject: "[PLANTME] User contact email",
             html: htmlToSend
         })
         logger.info("Send email successfully")
