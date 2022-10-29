@@ -49,6 +49,9 @@ usersRouter.post("/", async (request, response, next) => {
 
     const savedCart = await cart.save();
 
+    savedUser.cart = savedCart._id;
+    await savedUser.save();
+
     response.status(201).json(savedUser);
   } catch (err) {
     next(err);
