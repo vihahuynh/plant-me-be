@@ -2,6 +2,7 @@ const fs = require("fs");
 const bcrypt = require("bcrypt");
 const usersRouter = require("express").Router();
 const User = require("./../models/user");
+const Cart = require("./../models/cart");
 const middleware = require("./../utils/middleware");
 
 usersRouter.post("/", async (request, response, next) => {
@@ -40,6 +41,14 @@ usersRouter.post("/", async (request, response, next) => {
 
     const savedUser = await user.save();
 
+    const cart = new Cart({
+      items: [],
+      quantity: 0,
+      user: savedUser._id,
+    });
+
+    const savedCart = await cart.save();
+
     response.status(201).json(savedUser);
   } catch (err) {
     next(err);
@@ -72,7 +81,6 @@ usersRouter.patch(
       }
 
       const userToUpdate = request.body;
-      console.log("userToUpdate: ", userToUpdate);
       const url = `${request.protocol}://${request.get(
         "host"
       )}/photos/${id}-avatar.png`;
@@ -89,8 +97,6 @@ usersRouter.patch(
 
         userToUpdate.avatarUrl = url;
       }
-      console.log("userToUpdate: ", userToUpdate.username);
-      console.log("user: ", user.username);
       if (user.username === userToUpdate.username || user.isAdmin) {
         const updatedUser = await User.findByIdAndUpdate(id, userToUpdate, {
           new: true,
