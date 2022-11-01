@@ -1,12 +1,11 @@
-# fly.toml file generated for plantme on 2022-10-29T14:19:00+07:00
+# fly.toml file generated for plantme-v2 on 2022-10-30T17:04:28+07:00
 
-app = "plantme"
+app = "plantme-v2"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [env]
-  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []

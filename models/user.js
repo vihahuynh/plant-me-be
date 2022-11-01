@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     avatarUrl: {
       type: String,
-      default: "http://localhost:3001/photos/default-avatar.png",
+      default: "/photos/default-avatar.png",
     },
     subscribed: {
       type: Boolean,
