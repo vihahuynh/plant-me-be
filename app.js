@@ -11,7 +11,7 @@ const productsRouter = require("./controllers/products");
 const reviewsRouter = require("./controllers/reviews");
 const notificationRouter = require("./controllers/notification");
 const orderRouter = require("./controllers/orders");
-const guestOrderRouter = require("./controllers/guestOrder")
+const guestOrderRouter = require("./controllers/guestOrder");
 const stockRouter = require("./controllers/stocks");
 const cartRouter = require("./controllers/carts");
 const authRouter = require("./controllers/auth");
@@ -58,7 +58,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/reviews", reviewsRouter);
 app.use("/api/notification", middleware.tokenExtractor, notificationRouter);
 app.use("/api/orders", middleware.tokenExtractor, orderRouter);
-app.use("/api/guest-orders", guestOrderRouter)
+app.use("/api/guest-orders", guestOrderRouter);
 app.use("/api/stocks", stockRouter);
 app.use("/api/carts", middleware.tokenExtractor, cartRouter);
 app.use("/api/addresses", middleware.tokenExtractor, addressRouter);
