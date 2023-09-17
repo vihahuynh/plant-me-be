@@ -14,7 +14,7 @@ const orderRouter = require("./controllers/orders");
 const guestOrderRouter = require("./controllers/guestOrder");
 const stockRouter = require("./controllers/stocks");
 const cartRouter = require("./controllers/carts");
-const authRouter = require("./controllers/auth");
+// const authRouter = require("./controllers/auth");
 const addressRouter = require("./controllers/addresses");
 const passwordResetRouter = require("./controllers/passwordReset");
 const emailRouter = require("./controllers/email");
@@ -63,7 +63,7 @@ app.use("/api/stocks", stockRouter);
 app.use("/api/carts", middleware.tokenExtractor, cartRouter);
 app.use("/api/addresses", middleware.tokenExtractor, addressRouter);
 app.use("/api/password-reset", passwordResetRouter);
-app.use("/api/auth", authRouter);
+// app.use("/api/auth", authRouter);
 app.use("/api/email", emailRouter);
 app.use("/photos", express.static("photos"));
 

@@ -27,18 +27,18 @@
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "handlebars": "^4.7.7",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.1",
     "mongodb": "^4.9.1",
     "mongoose": "^6.5.5",
     "multer": "^1.4.5-lts.1",
     "multer-gridfs-storage": "^5.0.2",
     "nodemailer": "^6.8.0",
-    "passport": "^0.5.3",
+    "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "validator": "^13.7.0"
   },
   "devDependencies": {
     "eslint": "^8.23.0",
-    "nodemon": "^2.0.19"
+    "nodemon": "^3.0.1"
   }
 }
