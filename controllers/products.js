@@ -6,11 +6,18 @@ const middleware = require("./../utils/middleware");
 productsRouter.get("/", async (request, response, next) => {
   try {
     const { sortBy, skip, limit, ...filters } = request.query;
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value.includes(",")) {
+        filters[key] = { $in: value.split(",") };
+      }
+    });
+    console.log("filters: ", filters);
     if (filters.stocks) {
       filters["stocks.1"] = { $exists: filters.stocks.toLowerCase() === "yes" };
       delete filters.stocks;
     }
-    const sorts = sortBy?.split(":") || 'createdAt:desc'.split(":")
+    const sorts = sortBy?.split(":") || "createdAt:desc".split(":");
     const products = await Product.find(filters)
       .sort([[sorts?.[0], sorts?.[1] === "desc" ? -1 : 1]])
       .skip(parseInt(skip))
