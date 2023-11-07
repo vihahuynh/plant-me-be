@@ -12,7 +12,6 @@ productsRouter.get("/", async (request, response, next) => {
         filters[key] = { $in: value.split(",") };
       }
     });
-    console.log("filters: ", filters);
     if (filters.stocks) {
       filters["stocks.1"] = { $exists: filters.stocks.toLowerCase() === "yes" };
       delete filters.stocks;
