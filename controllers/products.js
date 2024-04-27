@@ -17,6 +17,7 @@ productsRouter.get("/", async (request, response, next) => {
       delete filters.stocks;
     }
     const sorts = sortBy?.split(":") || "createdAt:desc".split(":");
+    const allProducts = await Product.find(filters);
     const products = await Product.find(filters)
       .sort([[sorts?.[0], sorts?.[1] === "desc" ? -1 : 1]])
       .skip(parseInt(skip))
@@ -26,7 +27,10 @@ productsRouter.get("/", async (request, response, next) => {
       })
       .populate("stocks")
       .exec();
-    response.json(products);
+    response.json({
+      products,
+      totalPages: Math.ceil(allProducts.length / parseInt(limit)),
+    });
   } catch (err) {
     next(err);
   }

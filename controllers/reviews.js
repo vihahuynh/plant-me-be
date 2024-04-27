@@ -10,14 +10,18 @@ reviewRouter.get("/", async (request, response, next) => {
       filters["images.1"] = { $exists: filters.images.toLowerCase() === "yes" };
       delete filters.images;
     }
-    const sorts = sortBy?.split(":") || 'createdAt:desc'.split(":")
+    const sorts = sortBy?.split(":") || "createdAt:desc".split(":");
+    const allReviews = await Review.find(filters);
     const reviews = await Review.find(filters)
       .sort([[sorts[0], sorts[1] === "desc" ? -1 : 1]])
       .skip(parseInt(skip))
       .limit(parseInt(limit))
       .populate("createdBy", { username: 1, avatarUrl: 1 })
       .populate("product", { title: 1, images: 1 });
-    response.json(reviews);
+    response.json({
+      reviews,
+      totalPages: Math.ceil(allReviews.length / parseInt(limit)) || 0,
+    });
   } catch (err) {
     next(err);
   }
